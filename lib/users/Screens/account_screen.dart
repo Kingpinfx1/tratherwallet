@@ -5,6 +5,7 @@ import 'package:firstwallet/users/userPreferences/current_user.dart';
 import 'package:firstwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -64,6 +65,9 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final CurrentUser currentUser = Get.put(CurrentUser());
+    final Uri _url = Uri.parse('https://alcoinbox.online/privacy-policy.html');
+    final Uri _aboutUrl = Uri.parse('https://alcoinbox.online');
+    final Uri _helpUrl = Uri.parse('https://alcoinbox.online');
 
     return Scaffold(
       appBar: AppBar(
@@ -144,6 +148,11 @@ class _AccountScreenState extends State<AccountScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ListTile(
+              onTap: () async {
+                if (!await launchUrl(_url)) {
+                  throw Exception('Could not launch $_url');
+                }
+              },
               leading: Icon(Icons.notifications),
               trailing: Icon(Icons.keyboard_arrow_right),
               title: Text('Privacy Policy'),
@@ -153,6 +162,11 @@ class _AccountScreenState extends State<AccountScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ListTile(
+              onTap: () async {
+                if (!await launchUrl(_aboutUrl)) {
+                  throw Exception('Could not launch $_aboutUrl');
+                }
+              },
               leading: Icon(Icons.settings),
               trailing: Icon(Icons.keyboard_arrow_right),
               title: Text('About'),
@@ -162,6 +176,11 @@ class _AccountScreenState extends State<AccountScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ListTile(
+              onTap: () async {
+                if (!await launchUrl(_helpUrl)) {
+                  throw Exception('Could not launch $_helpUrl');
+                }
+              },
               leading: Icon(Icons.chat),
               trailing: Icon(Icons.keyboard_arrow_right),
               title: Text('Help Center'),

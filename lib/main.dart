@@ -1,6 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'package:firstwallet/notification/notification_service.dart';
 import 'package:firstwallet/users/Screens/introscreen.dart';
 import 'package:firstwallet/users/controllers/balance_controller.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +5,6 @@ import 'package:get/get.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
   Get.put(BalanceController());
 
   runApp(const MyApp());

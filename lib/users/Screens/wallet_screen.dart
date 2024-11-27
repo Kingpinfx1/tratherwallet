@@ -81,7 +81,7 @@ class WalletScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(),
+                      color: Colors.grey,
                       spreadRadius: 5,
                       blurRadius: 7,
                       offset: Offset(0, 3),

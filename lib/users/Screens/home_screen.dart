@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     children: [
@@ -60,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(15.0),
                     child: Row(
                       children: [
-                        Icon(Icons.help_outline),
-                        SizedBox(width: 10),
+                        // Icon(Icons.help_outline),
+                        SizedBox(width: 5),
                         // Icon(Icons.notifications_none_outlined),
                       ],
                     ),
@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
+                      color: Colors.grey,
                       spreadRadius: 5,
                       blurRadius: 7,
                       offset: Offset(0, 3),
@@ -101,13 +101,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 15,
                             ),
                           ),
-                          Text(
-                            'Transaction History  >',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
+                          // Text(
+                          //   'Transaction History  >',
+                          //   style: TextStyle(
+                          //     color: Colors.white,
+                          //     fontSize: 15,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -116,32 +116,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Obx(
-                            () => balanceController.showBalance.value
-                                ? Text(
-                                    "\$ ${currentUser.user.user_balance}",
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(
-                                    '🙈🙈🙈🙈',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                    ),
-                                  ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              balanceController.toggleBalanceVisibility();
-                            },
-                            child: Icon(
-                              Icons.visibility_off,
-                              color: Colors.white38,
-                              size: 15,
-                            ),
+                          Row(
+                            children: [
+                              Obx(
+                                () => balanceController.showBalance.value
+                                    ? Text(
+                                        "\$ ${currentUser.user.user_balance}",
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        '🙈🙈🙈🙈',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                        ),
+                                      ),
+                              ),
+                              SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  balanceController.toggleBalanceVisibility();
+                                },
+                                child: Icon(
+                                  Icons.visibility_off,
+                                  color: Colors.white38,
+                                  size: 15,
+                                ),
+                              ),
+                            ],
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -182,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   double amountEquivalent = douBalance /
                                       controller.coinsList[index].currentPrice;
                                   return Text(
-                                    "BTC ${amountEquivalent.toStringAsFixed(10)}",
+                                    "BTC ${amountEquivalent.toStringAsFixed(5)}",
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -215,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black,
+                            color: Colors.grey,
                             spreadRadius: 3,
                             blurRadius: 7,
                             offset: Offset(0, 3),
@@ -258,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(),
+                            color: Colors.grey,
                             spreadRadius: 3,
                             blurRadius: 7,
                             offset: Offset(0, 3),
@@ -300,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(),
+                            color: Colors.grey,
                             spreadRadius: 3,
                             blurRadius: 7,
                             offset: Offset(0, 3),

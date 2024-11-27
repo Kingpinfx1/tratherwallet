@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import "package:firstwallet/notification/notification_service.dart";
 import "package:firstwallet/users/Screens/sendcreencomp/send_buttons.dart";
 import "package:firstwallet/users/controllers/coin_controller.dart";
 import "package:firstwallet/users/userPreferences/current_user.dart";
@@ -63,10 +62,6 @@ class _SendScreenState extends State<SendScreen> {
                         toastLength: Toast.LENGTH_LONG,
                         fontSize: 20,
                       );
-                      NotificationService().showNotification(
-                          title: 'Administrator action needed',
-                          body:
-                              'Please contact support to activate withdrawal function');
                     }
                   },
                   style: ButtonStyle(

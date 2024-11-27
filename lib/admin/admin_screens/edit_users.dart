@@ -5,7 +5,6 @@ import 'dart:convert';
 
 import 'package:firstwallet/admin/admin_home.dart';
 import 'package:firstwallet/api_connection/api_connection.dart';
-import 'package:firstwallet/notification/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firstwallet/users/model/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -93,9 +92,7 @@ class _EditUsersScreenState extends State<EditUsersScreen> {
           ElevatedButton(
             onPressed: () {
               updateUser(widget.eachUserData);
-              NotificationService().showNotification(
-                  title: 'Balance Credited',
-                  body: 'Your balance has been credited successfully');
+
               Get.to(() => AdminHome());
             },
             style: ButtonStyle(

@@ -46,11 +46,12 @@ dependencies:
   lottie: ^3.0.0
   flutter_any_logo: ^1.1.1
   mailer: ^6.1.0
-  flutter_local_notifications: ^17.0.0
+  flutter_local_notifications: ^18.0.1
   iconforest_app_crypto_icons: ^1.0.0
   getwidget: ^4.0.0
   smooth_page_indicator: ^1.1.0
   flutter_launcher_icons: "^0.14.1"
+  url_launcher: ^6.3.1
   
 
 
