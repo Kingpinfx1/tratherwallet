@@ -1,5 +1,5 @@
-import 'package:firstwallet/users/model/user_model.dart';
-import 'package:firstwallet/users/userPreferences/user_preferences.dart';
+import 'package:tratherwallet/users/model/user_model.dart';
+import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:get/get.dart';
 
 class CurrentUser extends GetxController {

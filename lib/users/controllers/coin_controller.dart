@@ -1,4 +1,4 @@
-import 'package:firstwallet/users/model/coin_model.dart';
+import 'package:tratherwallet/users/model/coin_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 

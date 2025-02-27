@@ -1,6 +1,6 @@
-import 'package:firstwallet/users/Screens/nav_screen.dart';
-import 'package:firstwallet/users/authentication/login.dart';
-import 'package:firstwallet/users/userPreferences/user_preferences.dart';
+import 'package:tratherwallet/users/Screens/nav_screen.dart';
+import 'package:tratherwallet/users/authentication/login.dart';
+import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class AuthGate extends StatefulWidget {

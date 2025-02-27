@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:firstwallet/admin/admin_login.dart';
-import 'package:firstwallet/admin/admin_screens/allusers.dart';
-import 'package:firstwallet/admin/admin_screens/deposit_methods.dart';
+import 'package:tratherwallet/admin/admin_login.dart';
+import 'package:tratherwallet/admin/admin_screens/allusers.dart';
+import 'package:tratherwallet/admin/admin_screens/deposit_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';

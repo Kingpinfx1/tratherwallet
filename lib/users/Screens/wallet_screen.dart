@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:firstwallet/users/Screens/paymentscreens/btc.dart';
-import 'package:firstwallet/users/Screens/paymentscreens/eth.dart';
-import 'package:firstwallet/users/Screens/paymentscreens/doge.dart';
-import 'package:firstwallet/users/userPreferences/current_user.dart';
+import 'package:tratherwallet/users/Screens/paymentscreens/btc.dart';
+import 'package:tratherwallet/users/Screens/paymentscreens/eth.dart';
+import 'package:tratherwallet/users/Screens/paymentscreens/doge.dart';
+import 'package:tratherwallet/users/userPreferences/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_any_logo/flutter_logo.dart';
@@ -71,80 +71,80 @@ class WalletScreen extends StatelessWidget {
             // ),
 
             //balance
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 150,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Available Balance',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                          Text(
-                            'Transaction History  >',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "\$${currentUser.user.user_balance}",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: null,
-                            style: ButtonStyle(
-                              elevation: WidgetStateProperty.all(3),
-                              backgroundColor:
-                                  WidgetStateProperty.all(Colors.white),
-                            ),
-                            child: Text(
-                              'Send Crypto',
-                              style: TextStyle(
-                                color: Colors.deepPurple,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(10.0),
+            //   child: Container(
+            //     height: 150,
+            //     width: MediaQuery.of(context).size.width,
+            //     decoration: BoxDecoration(
+            //       color: Colors.deepPurple,
+            //       borderRadius: BorderRadius.circular(20),
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.grey,
+            //           spreadRadius: 5,
+            //           blurRadius: 7,
+            //           offset: Offset(0, 3),
+            //         ),
+            //       ],
+            //     ),
+            //     child: Column(
+            //       children: [
+            //         Padding(
+            //           padding: const EdgeInsets.all(15.0),
+            //           child: Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //             children: [
+            //               Text(
+            //                 'Available Balance',
+            //                 style: TextStyle(
+            //                   color: Colors.white,
+            //                   fontSize: 15,
+            //                 ),
+            //               ),
+            //               // Text(
+            //               //   'Transaction History  >',
+            //               //   style: TextStyle(
+            //               //     color: Colors.white,
+            //               //     fontSize: 15,
+            //               //   ),
+            //               // ),
+            //             ],
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: const EdgeInsets.all(15.0),
+            //           child: Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //             children: [
+            //               Text(
+            //                 "\$${currentUser.user.user_balance}",
+            //                 style: TextStyle(
+            //                   fontSize: 25,
+            //                   color: Colors.white,
+            //                 ),
+            //               ),
+            //               ElevatedButton(
+            //                 onPressed: null,
+            //                 style: ButtonStyle(
+            //                   elevation: WidgetStateProperty.all(3),
+            //                   backgroundColor:
+            //                       WidgetStateProperty.all(Colors.white),
+            //                 ),
+            //                 child: Text(
+            //                   'Send Crypto',
+            //                   style: TextStyle(
+            //                     color: Colors.deepPurple,
+            //                   ),
+            //                 ),
+            //               )
+            //             ],
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

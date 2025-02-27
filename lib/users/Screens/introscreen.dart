@@ -1,7 +1,7 @@
-import 'package:firstwallet/users/Screens/intopagescreens/intropage1.dart';
-import 'package:firstwallet/users/Screens/intopagescreens/intropage2.dart';
-import 'package:firstwallet/users/Screens/intopagescreens/intropage3.dart';
-import 'package:firstwallet/users/authentication/authgate.dart';
+import 'package:tratherwallet/users/Screens/intopagescreens/intropage1.dart';
+import 'package:tratherwallet/users/Screens/intopagescreens/intropage2.dart';
+import 'package:tratherwallet/users/Screens/intopagescreens/intropage3.dart';
+import 'package:tratherwallet/users/authentication/authgate.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

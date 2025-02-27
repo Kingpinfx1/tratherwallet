@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firstwallet/users/Screens/account_screen.dart';
-import 'package:firstwallet/users/Screens/crypto_screen.dart';
-import 'package:firstwallet/users/Screens/send_screen.dart';
-import 'package:firstwallet/users/Screens/home_screen.dart';
-import 'package:firstwallet/users/Screens/wallet_screen.dart';
-import 'package:firstwallet/users/userPreferences/current_user.dart';
+import 'package:tratherwallet/users/Screens/account_screen.dart';
+import 'package:tratherwallet/users/Screens/crypto_screen.dart';
+import 'package:tratherwallet/users/Screens/send_screen.dart';
+import 'package:tratherwallet/users/Screens/home_screen.dart';
+import 'package:tratherwallet/users/Screens/wallet_screen.dart';
+import 'package:tratherwallet/users/userPreferences/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

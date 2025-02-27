@@ -2,9 +2,9 @@
 
 import 'dart:convert';
 
-import 'package:firstwallet/admin/admin_screens/edit_users.dart';
-import 'package:firstwallet/api_connection/api_connection.dart';
-import 'package:firstwallet/users/model/user_model.dart';
+import 'package:tratherwallet/admin/admin_screens/edit_users.dart';
+import 'package:tratherwallet/api_connection/api_connection.dart';
+import 'package:tratherwallet/users/model/user_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:firstwallet/users/Screens/crypto_screen.dart';
-import 'package:firstwallet/users/Screens/send_screen.dart';
-import 'package:firstwallet/users/Screens/wallet_screen.dart';
-import 'package:firstwallet/users/controllers/balance_controller.dart';
-import 'package:firstwallet/users/controllers/coin_controller.dart';
-import 'package:firstwallet/users/userPreferences/current_user.dart';
+import 'package:tratherwallet/users/Screens/crypto_screen.dart';
+import 'package:tratherwallet/users/Screens/send_screen.dart';
+import 'package:tratherwallet/users/Screens/wallet_screen.dart';
+import 'package:tratherwallet/users/controllers/balance_controller.dart';
+import 'package:tratherwallet/users/controllers/coin_controller.dart';
+import 'package:tratherwallet/users/userPreferences/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

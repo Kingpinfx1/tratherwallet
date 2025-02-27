@@ -1,5 +1,5 @@
-import 'package:firstwallet/users/Screens/introscreen.dart';
-import 'package:firstwallet/users/controllers/balance_controller.dart';
+import 'package:tratherwallet/users/Screens/introscreen.dart';
+import 'package:tratherwallet/users/controllers/balance_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

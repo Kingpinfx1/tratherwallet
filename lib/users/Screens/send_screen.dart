@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import "package:firstwallet/users/Screens/sendcreencomp/send_buttons.dart";
-import "package:firstwallet/users/controllers/coin_controller.dart";
-import "package:firstwallet/users/userPreferences/current_user.dart";
+import "package:tratherwallet/users/Screens/sendcreencomp/send_buttons.dart";
+import "package:tratherwallet/users/controllers/coin_controller.dart";
+import "package:tratherwallet/users/userPreferences/current_user.dart";
 import "package:flutter/material.dart";
 import "package:fluttertoast/fluttertoast.dart";
 import "package:get/get.dart";

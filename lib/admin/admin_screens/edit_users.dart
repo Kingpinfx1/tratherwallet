@@ -3,10 +3,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:firstwallet/admin/admin_home.dart';
-import 'package:firstwallet/api_connection/api_connection.dart';
+import 'package:tratherwallet/admin/admin_home.dart';
+import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:flutter/material.dart';
-import 'package:firstwallet/users/model/user_model.dart';
+import 'package:tratherwallet/users/model/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

@@ -1,4 +1,4 @@
-package com.firstwallet
+package top.tratherwallet
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'package:firstwallet/users/authentication/login.dart';
-import 'package:firstwallet/users/model/user_model.dart';
+import 'package:tratherwallet/users/authentication/login.dart';
+import 'package:tratherwallet/users/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -85,7 +85,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         var resBodyOfSignUp = jsonDecode(res.body);
         if (resBodyOfSignUp['success'] == true) {
           Fluttertoast.showToast(
-              msg: "Congratulations, you are signed-up successfully.");
+              msg:
+                  "Congratulations, you are signed-up successfully, Login to your account");
 
           setState(() {
             firstnameController.clear();
@@ -94,6 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             emailController.clear();
             passwordController.clear();
           });
+          Get.to(() => LoginScreen());
         } else {
           Fluttertoast.showToast(msg: "Error Occurred, Try Again.");
         }

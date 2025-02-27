@@ -2,10 +2,9 @@
 
 import 'dart:convert';
 
-import 'package:firstwallet/admin/admin_login.dart';
-import 'package:firstwallet/users/Screens/nav_screen.dart';
-import 'package:firstwallet/users/authentication/register.dart';
-import 'package:firstwallet/users/userPreferences/user_preferences.dart';
+import 'package:tratherwallet/users/Screens/nav_screen.dart';
+import 'package:tratherwallet/users/authentication/register.dart';
+import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -31,7 +30,56 @@ class _LoginScreenState extends State<LoginScreen> {
 
   var isObsecure = true.obs;
 
+  // loginUserNow() async {
+  //   try {
+  //     var res = await http.post(
+  //       Uri.parse(API.login),
+  //       body: {
+  //         "user_email": emailController.text.trim(),
+  //         "user_password": passwordController.text.trim(),
+  //       },
+  //     );
+
+  //     if (res.statusCode ==
+  //         200) //from flutter app the connection with api to server - success
+  //     {
+  //       var resBodyOfLogin = jsonDecode(res.body);
+  //       if (resBodyOfLogin['success'] == true) {
+  //         Fluttertoast.showToast(msg: " You're logged-in Successfully.");
+
+  //         User userInfo = User.fromJson(resBodyOfLogin["userData"]);
+
+  //         //save userInfo to local Storage using Shared Prefrences
+  //         await RememberUserPrefs.storeUserInfo(userInfo);
+
+  //         Future.delayed(const Duration(milliseconds: 2000), () {
+  //           Get.to(() => UserNavScreen());
+  //         });
+  //       } else {
+  //         Fluttertoast.showToast(
+  //             msg:
+  //                 "Incorrect Credentials.\nPlease write correct password or email and Try Again.");
+  //       }
+  //     } else {
+  //       Fluttertoast.showToast(msg: "Status is not 200");
+  //     }
+  //   } catch (errorMsg) {
+  //     Fluttertoast.showToast(msg: '$errorMsg');
+  //   }
+  // }
+
   loginUserNow() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
     try {
       var res = await http.post(
         Uri.parse(API.login),
@@ -41,16 +89,16 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
 
-      if (res.statusCode ==
-          200) //from flutter app the connection with api to server - success
-      {
+      Navigator.pop(context); // Close the loading dialog
+
+      if (res.statusCode == 200) {
         var resBodyOfLogin = jsonDecode(res.body);
         if (resBodyOfLogin['success'] == true) {
-          Fluttertoast.showToast(msg: " You're logged-in Successfully.");
+          Fluttertoast.showToast(msg: "You're logged in successfully.");
 
           User userInfo = User.fromJson(resBodyOfLogin["userData"]);
 
-          //save userInfo to local Storage using Shared Prefrences
+          // Save userInfo to local storage
           await RememberUserPrefs.storeUserInfo(userInfo);
 
           Future.delayed(const Duration(milliseconds: 2000), () {
@@ -58,13 +106,13 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         } else {
           Fluttertoast.showToast(
-              msg:
-                  "Incorrect Credentials.\nPlease write correct password or email and Try Again.");
+              msg: "Incorrect credentials. Please try again.");
         }
       } else {
-        Fluttertoast.showToast(msg: "Status is not 200");
+        Fluttertoast.showToast(msg: "Status code is not 200.");
       }
     } catch (errorMsg) {
+      Navigator.pop(context); // Close the loading dialog in case of an error
       Fluttertoast.showToast(msg: '$errorMsg');
     }
   }
@@ -249,30 +297,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 30),
                   //not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Admin?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => AdminLogin());
-                        },
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       'Admin?',
+                  //       style: TextStyle(
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 5),
+                  //     GestureDetector(
+                  //       onTap: () {
+                  //         Get.to(() => AdminLogin());
+                  //       },
+                  //       child: Text(
+                  //         'Login',
+                  //         style: TextStyle(
+                  //           color: Colors.blue,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

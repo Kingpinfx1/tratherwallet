@@ -1,5 +1,5 @@
 class API {
-  static const hostConnect = "https://alapi.alcoinbox.online/";
+  static const hostConnect = "https://api.tratherwallet.top/";
   // static const hostConnect = "http://172.20.10.5/first_wallet";
 
   static const hostConnectUser = "$hostConnect/user";
@@ -14,6 +14,8 @@ class API {
   static const login = "$hostConnectUser/login.php";
 
   static const readUserDetails = "$hostConnectUser/readuserdetails.php";
+
+  static const deleteAccount = "$hostConnectUser/deleteaccount.php";
 
   // admin
   static const adminLogin = "$hostConnectAdmin/login.php";

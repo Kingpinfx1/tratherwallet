@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firstwallet/users/model/user_model.dart';
+import 'package:tratherwallet/users/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RememberUserPrefs {

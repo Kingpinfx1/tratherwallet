@@ -1,11 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:firstwallet/users/authentication/login.dart';
-import 'package:firstwallet/users/userPreferences/current_user.dart';
-import 'package:firstwallet/users/userPreferences/user_preferences.dart';
+import 'dart:convert';
+
+import 'package:tratherwallet/users/authentication/login.dart';
+import 'package:tratherwallet/users/model/user_model.dart';
+import 'package:tratherwallet/users/userPreferences/current_user.dart';
+import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+
+import '../../api_connection/api_connection.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -65,9 +72,101 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final CurrentUser currentUser = Get.put(CurrentUser());
-    final Uri _url = Uri.parse('https://alcoinbox.online/privacy-policy.html');
-    final Uri _aboutUrl = Uri.parse('https://alcoinbox.online');
-    final Uri _helpUrl = Uri.parse('https://alcoinbox.online');
+    final Uri _url = Uri.parse('https://tratherwallet.top/privacy-policy.html');
+    final Uri _aboutUrl = Uri.parse('https://tratherwallet.top');
+    //final Uri _helpUrl = Uri.parse('https://tratherwallet.top');
+    final Uri _helpUrl = Uri.parse(
+        'https://widget-page.smartsupp.com/widget/a9ba59c1d96bd8cdde31ecaf60e7370a586bb2d1');
+
+    Future<String> deleteUser(User user) async {
+      try {
+        var res = await http.post(Uri.parse(API.deleteAccount), body: {
+          'user_id': user.user_id.toString(),
+        });
+
+        if (res.statusCode == 200) {
+          var resBodyOfUpdate = jsonDecode(res.body);
+
+          if (resBodyOfUpdate['success'] == true) {
+            return "User data updated successfully";
+          } else {
+            return "Failed to delete user";
+          }
+        } else {
+          return "Server responded with status code ${res.statusCode}";
+        }
+      } catch (error) {
+        return "An error occurred: $error";
+      }
+    }
+
+    deleteAccount() async {
+      var resultResponse = await Get.dialog(
+        AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Delete Account?",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+            "Are you sure you want to delete your account?",
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Get.back(); // Close dialog without proceeding
+                },
+                child: const Text(
+                  "No",
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                  ),
+                )),
+            TextButton(
+                onPressed: () {
+                  Get.back(result: "deleteConfirmed"); // Proceed to delete
+                },
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                )),
+          ],
+        ),
+      );
+
+      if (resultResponse == "deleteConfirmed") {
+        try {
+          String resultMessage = await deleteUser(currentUser.user);
+
+          // Check result message to confirm deletion success
+          if (resultMessage == "User data updated successfully") {
+            Fluttertoast.showToast(
+              msg: "Your account has been deleted successfully.",
+              gravity: ToastGravity.CENTER,
+            );
+
+            // Clear user preferences and navigate to the login screen
+            await RememberUserPrefs.removeUserInfo();
+            Get.off(() => LoginScreen());
+          } else {
+            Fluttertoast.showToast(
+              msg: "Account deletion failed: $resultMessage",
+              gravity: ToastGravity.CENTER,
+            );
+          }
+        } catch (error) {
+          Fluttertoast.showToast(
+            msg: "An error occurred during deletion: $error",
+            gravity: ToastGravity.CENTER,
+          );
+        }
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -187,6 +286,22 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           ),
           SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: ListTile(
+              onTap: () {
+                deleteAccount();
+              },
+              leading: Icon(Icons.delete),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              title: Text(
+                'Delete Account',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ListTile(
