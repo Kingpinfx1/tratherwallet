@@ -32,200 +32,262 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final Color surface = const Color(0xFFF6F3EE);
+    final Color primary = const Color(0xFF0F766E);
+    final Color accent = const Color(0xFFF59E0B);
+
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: surface,
       body: SafeArea(
-        child: ListView(
+        child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFF7EFE3),
+                      Color(0xFFE9F5F2),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: -40,
+              right: -60,
+              child: Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: accent.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -60,
+              left: -40,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: primary.withOpacity(0.10),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(width: 10),
-                      Text(
-                        'Hi',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Obx(
-                        () => Text(
-                          '${currentUser.user.user_firstname} ${currentUser.user.user_lastname}',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome back',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 14,
+                              color: Colors.black54,
+                              letterSpacing: 0.4,
+                            ),
                           ),
+                          const SizedBox(height: 6),
+                          Obx(
+                            () => Text(
+                              '${currentUser.user.user_firstname} ${currentUser.user.user_lastname}',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.notifications_none_outlined,
+                          color: primary,
                         ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      children: [
-                        // Icon(Icons.help_outline),
-                        SizedBox(width: 5),
-                        // Icon(Icons.notifications_none_outlined),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                  child: Container(
+                    width: screenSize.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF0F766E),
+                          Color(0xFF14B8A6),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.12),
+                          blurRadius: 20,
+                          offset: const Offset(0, 12),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                height: 180,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Available Balance',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
+                            style: GoogleFonts.spaceGrotesk(
+                              color: Colors.white70,
+                              fontSize: 13,
+                              letterSpacing: 0.4,
                             ),
                           ),
-                          // Text(
-                          //   'Transaction History  >',
-                          //   style: TextStyle(
-                          //     color: Colors.white,
-                          //     fontSize: 15,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                          const SizedBox(height: 12),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Obx(
-                                () => balanceController.showBalance.value
-                                    ? Text(
-                                        "\$ ${currentUser.user.user_balance}",
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Text(
-                                        '🙈🙈🙈🙈',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                        ),
-                                      ),
+                              Row(
+                                children: [
+                                  Obx(
+                                    () => balanceController.showBalance.value
+                                        ? Text(
+                                            "\$ ${currentUser.user.user_balance}",
+                                            style: GoogleFonts.spaceGrotesk(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : Text(
+                                            '••••••',
+                                            style: GoogleFonts.spaceGrotesk(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      balanceController
+                                          .toggleBalanceVisibility();
+                                    },
+                                    child: Icon(
+                                      balanceController.showBalance.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {
-                                  balanceController.toggleBalanceVisibility();
+                              TextButton(
+                                onPressed: () {
+                                  Get.to(() => WalletScreen());
                                 },
-                                child: Icon(
-                                  Icons.visibility_off,
-                                  color: Colors.white38,
-                                  size: 15,
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: primary,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                              ),
+                                child: Text(
+                                  'Wallet',
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              )
                             ],
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Get.to(() => WalletScreen());
-                            },
-                            style: ButtonStyle(
-                              elevation: WidgetStateProperty.all(3),
-                              backgroundColor:
-                                  WidgetStateProperty.all(Colors.white),
-                            ),
-                            child: Text(
-                              'Wallet',
-                              style: TextStyle(
-                                color: Colors.deepPurple,
-                              ),
-                            ),
+                          const SizedBox(height: 16),
+                          Obx(
+                            () => controller.isLoading.value
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : controller.coinsList.isEmpty
+                                    ? Text(
+                                        "BTC --",
+                                        style: GoogleFonts.spaceGrotesk(
+                                          fontSize: 14,
+                                          color: Colors.white70,
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: null,
+                                        itemCount: 1,
+                                        itemBuilder: (context, index) {
+                                          if (index >=
+                                              controller.coinsList.length) {
+                                            return const SizedBox.shrink();
+                                          }
+                                          String currentAmount =
+                                              currentUser.user.user_balance;
+                                          double douBalance =
+                                              double.tryParse(currentAmount) ??
+                                                  0;
+                                          double amountEquivalent = douBalance /
+                                              controller.coinsList[index]
+                                                  .currentPrice;
+                                          return Text(
+                                            "BTC ${amountEquivalent.toStringAsFixed(5)}",
+                                            style: GoogleFonts.spaceGrotesk(
+                                              fontSize: 14,
+                                              color: Colors.white70,
+                                            ),
+                                          );
+                                        }),
                           )
                         ],
                       ),
                     ),
-                    //btc equivalent
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Obx(
-                        () => controller.isLoading.value
-                            ? Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : controller.coinsList.isEmpty
-                                ? Text(
-                                    "BTC --",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: null,
-                                    itemCount: 1,
-                                    itemBuilder: (context, index) {
-                                      if (index >=
-                                          controller.coinsList.length) {
-                                        return const SizedBox.shrink();
-                                      }
-                                      String currentAmount =
-                                          currentUser.user.user_balance;
-                                      double douBalance =
-                                          double.tryParse(currentAmount) ?? 0;
-                                      double amountEquivalent = douBalance /
-                                          controller
-                                              .coinsList[index].currentPrice;
-                                      return Text(
-                                        "BTC ${amountEquivalent.toStringAsFixed(5)}",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                        ),
-                                      );
-                                    }),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
             SizedBox(height: 10),
 
             /// three buttons
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -233,42 +295,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Get.to(() => SendScreen());
                     },
-                    child: Container(
-                      height: 60,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.deepPurple.shade400,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 3,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 9, 0, 0),
-                              child: Icon(
-                                Icons.send,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Send',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: _QuickAction(
+                      label: 'Send',
+                      icon: Icons.send,
+                      color: primary,
                     ),
                   ),
                   //crypto screen button
@@ -276,84 +306,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Get.to(() => CryptoScreen());
                     },
-                    child: Container(
-                      height: 60,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.deepPurple.shade400,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 3,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 9, 0, 0),
-                              child: Icon(
-                                Icons.show_chart,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Crypto',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: _QuickAction(
+                      label: 'Market',
+                      icon: Icons.show_chart,
+                      color: accent,
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Get.to(() => WalletScreen());
                     },
-                    child: Container(
-                      height: 60,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.deepPurple.shade400,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 3,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 9, 0, 0),
-                              child: Icon(
-                                Icons.insert_chart,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Receive',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: _QuickAction(
+                      label: 'Receive',
+                      icon: Icons.south_west,
+                      color: const Color(0xFF111827),
                     ),
                   ),
                 ],
@@ -361,7 +327,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             Padding(
-              padding: EdgeInsets.fromLTRB(25, 5, 25, 1),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Top Movers',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    '24h',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 13,
+                      color: Colors.black45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: Obx(
                 () => controller.isLoading.value
                     ? Center(
@@ -375,9 +363,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: controller.coinsList.length < 5
                                 ? controller.coinsList.length
                                 : 5,
-                            itemBuilder: (context, index) {
+                        itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width,
                               height: 60,
@@ -388,17 +376,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Row(
                                     children: [
                                       Container(
-                                        width: 60,
-                                        height: 60,
+                                        width: 54,
+                                        height: 54,
                                         decoration: BoxDecoration(
-                                          color: Colors.grey.shade400,
+                                          color: Colors.white,
                                           borderRadius:
-                                              BorderRadius.circular(20),
+                                              BorderRadius.circular(16),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.grey.shade200,
-                                              offset: Offset(4, 4),
-                                              blurRadius: 5,
+                                              color:
+                                                  Colors.black.withOpacity(0.06),
+                                              offset: const Offset(0, 6),
+                                              blurRadius: 10,
                                             )
                                           ],
                                         ),
@@ -415,17 +404,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         children: [
                                           Text(
                                             controller.coinsList[index].name,
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 15,
+                                            style: GoogleFonts.spaceGrotesk(
+                                              fontSize: 16,
                                               color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w700,
                                             ),
                                           ),
                                           Text(
                                             "${controller.coinsList[index].priceChangePercentage24H.toStringAsFixed(2)} %",
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 15,
-                                              color: Colors.black,
+                                            style: GoogleFonts.spaceGrotesk(
+                                              fontSize: 13,
+                                              color: Colors.black54,
                                             ),
                                           ),
                                         ],
@@ -438,18 +427,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       Text(
                                         "\$ ${controller.coinsList[index].currentPrice}",
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 15,
+                                        style: GoogleFonts.spaceGrotesk(
+                                          fontSize: 16,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       Text(
                                         controller.coinsList[index].symbol
                                             .toUpperCase(),
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 15,
-                                          color: Colors.black,
+                                        style: GoogleFonts.spaceGrotesk(
+                                          fontSize: 12,
+                                          color: Colors.black45,
                                         ),
                                       ),
                                     ],
@@ -458,8 +447,69 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           );
-                            },
-                          ),
+                        },
+                      ),
+                ),
+              ),
+          ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color color;
+
+  const _QuickAction({
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 70,
+      width: 105,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 20,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
               ),
             ),
           ],
