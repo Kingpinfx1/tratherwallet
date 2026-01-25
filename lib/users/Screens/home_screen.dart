@@ -25,6 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final CoinController controller = Get.put(CoinController());
 
   @override
+  void initState() {
+    super.initState();
+    currentUser.getUserInfo();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
@@ -47,11 +53,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(width: 5),
-                      Text(
-                        '${currentUser.user.user_firstname} ${currentUser.user.user_lastname}',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
+                      Obx(
+                        () => Text(
+                          '${currentUser.user.user_firstname} ${currentUser.user.user_lastname}',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -195,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       String currentAmount =
                                           currentUser.user.user_balance;
                                       double douBalance =
-                                          double.parse(currentAmount);
+                                          double.tryParse(currentAmount) ?? 0;
                                       double amountEquivalent = douBalance /
                                           controller
                                               .coinsList[index].currentPrice;
