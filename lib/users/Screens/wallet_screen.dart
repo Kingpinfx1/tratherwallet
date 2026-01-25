@@ -7,6 +7,7 @@ import 'package:tratherwallet/users/userPreferences/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_any_logo/flutter_logo.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WalletScreen extends StatelessWidget {
   final CurrentUser currentUser = Get.put(CurrentUser());
@@ -15,136 +16,169 @@ class WalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final Color surface = const Color(0xFFF6F3EE);
+    final Color primary = const Color(0xFF0F766E);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.deepPurple,
-          title: Text(
-            'Your Wallets',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-        backgroundColor: Colors.grey.shade300,
-        body: ListView(
+        backgroundColor: surface,
+        body: Stack(
           children: [
-            TabBar(
-              tabs: [
-                Tab(
-                  child: AnyLogo.crypto.bitcoin.image(),
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFF7EFE3),
+                      Color(0xFFE9F5F2),
+                    ],
+                  ),
                 ),
-                Tab(
-                  child: AnyLogo.crypto.ethereum.image(),
-                ),
-                Tab(
-                  child: AnyLogo.crypto.dogecoin.image(),
-                )
-              ],
+              ),
             ),
-            SizedBox(
-              height: 400,
-              child: TabBarView(
+            Positioned(
+              top: -40,
+              right: -60,
+              child: Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: primary.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -60,
+              left: -40,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF59E0B).withOpacity(0.10),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
                 children: [
-                  BtcScreen(),
-                  EthScreen(),
-                  DogeScreen(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Your Wallets',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Manage your crypto balances',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 13,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.08),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.account_balance_wallet_outlined,
+                          color: primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 14,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: TabBar(
+                      indicator: BoxDecoration(
+                        color: primary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      labelColor: primary,
+                      unselectedLabelColor: Colors.black54,
+                      labelStyle: GoogleFonts.spaceGrotesk(
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
+                      tabs: [
+                        Tab(
+                          child: AnyLogo.crypto.bitcoin.image(),
+                        ),
+                        Tab(
+                          child: AnyLogo.crypto.ethereum.image(),
+                        ),
+                        Tab(
+                          child: AnyLogo.crypto.dogecoin.image(),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: screenSize.width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 16,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: SizedBox(
+                      height: screenSize.height * 0.58,
+                      child: TabBarView(
+                        children: [
+                          BtcScreen(),
+                          EthScreen(),
+                          DogeScreen(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 0),
-            //   child: Container(
-            //     width: MediaQuery.of(context).size.width,
-            //     height: 200,
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(0),
-            //     ),
-            //     child: Lottie.network(
-            //       height: 200,
-            //       width: 100,
-            //       'https://lottie.host/df65bd10-582b-4806-aaef-7c910eed3af5/oFoBujtvhm.json',
-            //     ),
-            //   ),
-            // ),
-
-            //balance
-            // Padding(
-            //   padding: const EdgeInsets.all(10.0),
-            //   child: Container(
-            //     height: 150,
-            //     width: MediaQuery.of(context).size.width,
-            //     decoration: BoxDecoration(
-            //       color: Colors.deepPurple,
-            //       borderRadius: BorderRadius.circular(20),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: Colors.grey,
-            //           spreadRadius: 5,
-            //           blurRadius: 7,
-            //           offset: Offset(0, 3),
-            //         ),
-            //       ],
-            //     ),
-            //     child: Column(
-            //       children: [
-            //         Padding(
-            //           padding: const EdgeInsets.all(15.0),
-            //           child: Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             children: [
-            //               Text(
-            //                 'Available Balance',
-            //                 style: TextStyle(
-            //                   color: Colors.white,
-            //                   fontSize: 15,
-            //                 ),
-            //               ),
-            //               // Text(
-            //               //   'Transaction History  >',
-            //               //   style: TextStyle(
-            //               //     color: Colors.white,
-            //               //     fontSize: 15,
-            //               //   ),
-            //               // ),
-            //             ],
-            //           ),
-            //         ),
-            //         Padding(
-            //           padding: const EdgeInsets.all(15.0),
-            //           child: Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //             children: [
-            //               Text(
-            //                 "\$${currentUser.user.user_balance}",
-            //                 style: TextStyle(
-            //                   fontSize: 25,
-            //                   color: Colors.white,
-            //                 ),
-            //               ),
-            //               ElevatedButton(
-            //                 onPressed: null,
-            //                 style: ButtonStyle(
-            //                   elevation: WidgetStateProperty.all(3),
-            //                   backgroundColor:
-            //                       WidgetStateProperty.all(Colors.white),
-            //                 ),
-            //                 child: Text(
-            //                   'Send Crypto',
-            //                   style: TextStyle(
-            //                     color: Colors.deepPurple,
-            //                   ),
-            //                 ),
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
