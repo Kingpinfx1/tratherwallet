@@ -175,25 +175,38 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? Center(
                                 child: CircularProgressIndicator(),
                               )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: null,
-                                itemCount: 1,
-                                itemBuilder: (context, index) {
-                                  String currentAmount =
-                                      currentUser.user.user_balance;
-                                  double douBalance =
-                                      double.parse(currentAmount);
-                                  double amountEquivalent = douBalance /
-                                      controller.coinsList[index].currentPrice;
-                                  return Text(
-                                    "BTC ${amountEquivalent.toStringAsFixed(5)}",
+                            : controller.coinsList.isEmpty
+                                ? Text(
+                                    "BTC --",
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
                                     ),
-                                  );
-                                }),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: null,
+                                    itemCount: 1,
+                                    itemBuilder: (context, index) {
+                                      if (index >=
+                                          controller.coinsList.length) {
+                                        return const SizedBox.shrink();
+                                      }
+                                      String currentAmount =
+                                          currentUser.user.user_balance;
+                                      double douBalance =
+                                          double.parse(currentAmount);
+                                      double amountEquivalent = douBalance /
+                                          controller
+                                              .coinsList[index].currentPrice;
+                                      return Text(
+                                        "BTC ${amountEquivalent.toStringAsFixed(5)}",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }),
                       ),
                     )
                   ],
@@ -346,11 +359,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: null,
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
+                    : controller.coinsList.isEmpty
+                        ? const SizedBox.shrink()
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: null,
+                            itemCount: controller.coinsList.length < 5
+                                ? controller.coinsList.length
+                                : 5,
+                            itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 5),
                             child: SizedBox(
@@ -433,8 +450,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           );
-                        },
-                      ),
+                            },
+                          ),
               ),
             ),
           ],

@@ -62,25 +62,29 @@ class Coin {
         symbol: json["symbol"],
         name: json["name"],
         image: json["image"],
-        currentPrice: json["current_price"]?.toDouble(),
-        marketCap: json["market_cap"],
-        marketCapRank: json["market_cap_rank"],
+        currentPrice: (json["current_price"] ?? 0).toDouble(),
+        marketCap: (json["market_cap"] ?? 0),
+        marketCapRank: (json["market_cap_rank"] ?? 0),
         // totalVolume: json["total_volume"],
-        high24H: json["high_24h"]?.toDouble(),
-        low24H: json["low_24h"]?.toDouble(),
-        priceChange24H: json["price_change_24h"]?.toDouble(),
+        high24H: (json["high_24h"] ?? 0).toDouble(),
+        low24H: (json["low_24h"] ?? 0).toDouble(),
+        priceChange24H: (json["price_change_24h"] ?? 0).toDouble(),
         priceChangePercentage24H:
-            json["price_change_percentage_24h"]?.toDouble(),
-        marketCapChange24H: json["market_cap_change_24h"]?.toDouble(),
+            (json["price_change_percentage_24h"] ?? 0).toDouble(),
+        marketCapChange24H: (json["market_cap_change_24h"] ?? 0).toDouble(),
         marketCapChangePercentage24H:
-            json["market_cap_change_percentage_24h"]?.toDouble(),
-        circulatingSupply: json["circulating_supply"]?.toDouble(),
-        ath: json["ath"]?.toDouble(),
-        athChangePercentage: json["ath_change_percentage"]?.toDouble(),
-        athDate: DateTime.parse(json["ath_date"]),
-        atl: json["atl"]?.toDouble(),
-        atlChangePercentage: json["atl_change_percentage"]?.toDouble(),
-        atlDate: DateTime.parse(json["atl_date"]),
+            (json["market_cap_change_percentage_24h"] ?? 0).toDouble(),
+        circulatingSupply: (json["circulating_supply"] ?? 0).toDouble(),
+        ath: (json["ath"] ?? 0).toDouble(),
+        athChangePercentage: (json["ath_change_percentage"] ?? 0).toDouble(),
+        athDate: json["ath_date"] == null
+            ? DateTime.fromMillisecondsSinceEpoch(0)
+            : DateTime.parse(json["ath_date"]),
+        atl: (json["atl"] ?? 0).toDouble(),
+        atlChangePercentage: (json["atl_change_percentage"] ?? 0).toDouble(),
+        atlDate: json["atl_date"] == null
+            ? DateTime.fromMillisecondsSinceEpoch(0)
+            : DateTime.parse(json["atl_date"]),
         roi: json["roi"],
       );
 

@@ -24,7 +24,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
 
 SPEC CHECKSUMS:
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_any_logo: 42f078f85b11aca59a029b03007f92301c4d7b86
   flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
   fluttertoast: 21eecd6935e7064cc1fcb733a4c5a428f3f24f0f

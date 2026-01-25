@@ -34,11 +34,15 @@ class CryptoScreen extends StatelessWidget {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 20,
-                        itemBuilder: (context, index) {
+                    : controller.coinsList.isEmpty
+                        ? const SizedBox.shrink()
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: controller.coinsList.length < 20
+                                ? controller.coinsList.length
+                                : 20,
+                            itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 15),
                             child: SizedBox(
@@ -121,8 +125,8 @@ class CryptoScreen extends StatelessWidget {
                               ),
                             ),
                           );
-                        },
-                      ),
+                            },
+                          ),
               )
             ],
           ),

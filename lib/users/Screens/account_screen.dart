@@ -75,8 +75,7 @@ class _AccountScreenState extends State<AccountScreen> {
     final Uri _url = Uri.parse('https://tratherwallet.top/privacy-policy.html');
     final Uri _aboutUrl = Uri.parse('https://tratherwallet.top');
     //final Uri _helpUrl = Uri.parse('https://tratherwallet.top');
-    final Uri _helpUrl = Uri.parse(
-        'https://widget-page.smartsupp.com/widget/a9ba59c1d96bd8cdde31ecaf60e7370a586bb2d1');
+   
 
     Future<String> deleteUser(User user) async {
       try {
@@ -276,8 +275,8 @@ class _AccountScreenState extends State<AccountScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ListTile(
               onTap: () async {
-                if (!await launchUrl(_helpUrl)) {
-                  throw Exception('Could not launch $_helpUrl');
+                if (!await launchUrl(_aboutUrl)) {
+                  throw Exception('Could not launch $_aboutUrl');
                 }
               },
               leading: Icon(Icons.chat),
