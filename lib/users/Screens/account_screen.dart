@@ -9,6 +9,7 @@ import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
@@ -168,156 +169,283 @@ class _AccountScreenState extends State<AccountScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            color: Colors.white,
-            letterSpacing: 4,
+      backgroundColor: const Color(0xFFF6F3EE),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFFF7EFE3),
+                    Color(0xFFE9F5F2),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            tooltip: 'Logout',
-            color: Colors.white,
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              signOutUser();
-            },
-          )
+          Positioned(
+            top: -40,
+            right: -60,
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF59E0B).withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -60,
+            left: -40,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                color: const Color(0xFF0F766E).withOpacity(0.10),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Profile',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Manage your account details',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 13,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.08),
+                            blurRadius: 12,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        tooltip: 'Logout',
+                        color: const Color(0xFF0F766E),
+                        icon: const Icon(Icons.logout),
+                        onPressed: () {
+                          signOutUser();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 34,
+                        backgroundColor: const Color(0xFF0F766E),
+                        backgroundImage: null,
+                        child: Text(
+                          currentUser.user.user_firstname[0].toUpperCase(),
+                          style: GoogleFonts.spaceGrotesk(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              currentUser.user.user_email.toString(),
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${currentUser.user.user_firstname} ${currentUser.user.user_lastname}',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 13,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 16,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      _SettingsTile(
+                        icon: Icons.notifications,
+                        title: 'Privacy Policy',
+                        onTap: () async {
+                          if (!await launchUrl(_url)) {
+                            throw Exception('Could not launch $_url');
+                          }
+                        },
+                      ),
+                      _SettingsTile(
+                        icon: Icons.settings,
+                        title: 'About',
+                        onTap: () async {
+                          if (!await launchUrl(_aboutUrl)) {
+                            throw Exception('Could not launch $_aboutUrl');
+                          }
+                        },
+                      ),
+                      _SettingsTile(
+                        icon: Icons.chat,
+                        title: 'Help Center',
+                        onTap: () async {
+                          if (!await launchUrl(_aboutUrl)) {
+                            throw Exception('Could not launch $_aboutUrl');
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 16,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      _SettingsTile(
+                        icon: Icons.delete,
+                        title: 'Delete Account',
+                        titleColor: const Color(0xFFEF4444),
+                        onTap: () {
+                          deleteAccount();
+                        },
+                      ),
+                      _SettingsTile(
+                        icon: Icons.logout,
+                        title: 'Logout',
+                        titleColor: const Color(0xFFEF4444),
+                        onTap: () {
+                          signOutUser();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
-      backgroundColor: Colors.grey.shade200,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.deepPurple,
-                  backgroundImage: null,
-                  child: Text(
-                    currentUser.user.user_firstname[0].toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    currentUser.user.user_email.toString(),
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    '${currentUser.user.user_firstname} ${currentUser.user.user_lastname}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Divider(
-              color: Colors.grey,
-              thickness: 2,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ListTile(
-              onTap: () async {
-                if (!await launchUrl(_url)) {
-                  throw Exception('Could not launch $_url');
-                }
-              },
-              leading: Icon(Icons.notifications),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              title: Text('Privacy Policy'),
-            ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ListTile(
-              onTap: () async {
-                if (!await launchUrl(_aboutUrl)) {
-                  throw Exception('Could not launch $_aboutUrl');
-                }
-              },
-              leading: Icon(Icons.settings),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              title: Text('About'),
-            ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ListTile(
-              onTap: () async {
-                if (!await launchUrl(_aboutUrl)) {
-                  throw Exception('Could not launch $_aboutUrl');
-                }
-              },
-              leading: Icon(Icons.chat),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              title: Text('Help Center'),
-            ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ListTile(
-              onTap: () {
-                deleteAccount();
-              },
-              leading: Icon(Icons.delete),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              title: Text(
-                'Delete Account',
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: ListTile(
-              onTap: () {
-                signOutUser();
-              },
-              leading: Icon(Icons.logout),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              title: Text(
-                'Logout',
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ),
-        ],
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color? titleColor;
+  final VoidCallback onTap;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.titleColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      leading: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF6F3EE),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          icon,
+          color: const Color(0xFF0F766E),
+        ),
+      ),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      title: Text(
+        title,
+        style: GoogleFonts.spaceGrotesk(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: titleColor ?? Colors.black87,
+        ),
       ),
     );
   }
