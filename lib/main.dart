@@ -1,5 +1,7 @@
 import 'package:tratherwallet/users/Screens/introscreen.dart';
+import 'package:tratherwallet/users/authentication/authgate.dart';
 import 'package:tratherwallet/users/controllers/balance_controller.dart';
+import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,7 +26,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: IntroScreen(),
+      home: FutureBuilder<bool>(
+        future: RememberUserPrefs.hasSeenIntro(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          return snapshot.data! ? const AuthGate() : const IntroScreen();
+        },
+      ),
     );
   }
 }

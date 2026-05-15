@@ -25,4 +25,14 @@ class RememberUserPrefs {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.remove("currentUser");
   }
+
+  static Future<void> storeIntroSeen() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool("hasSeenIntro", true);
+  }
+
+  static Future<bool> hasSeenIntro() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getBool("hasSeenIntro") ?? false;
+  }
 }

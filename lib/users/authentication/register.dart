@@ -1,12 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:convert';
+
 import 'package:tratherwallet/users/authentication/login.dart';
 import 'package:tratherwallet/users/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 import '../../api_connection/api_connection.dart';
@@ -19,52 +18,40 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  var formKey = GlobalKey<FormState>();
+  static const Color primary = Color(0xFF0F766E);
+  static const Color accent = Color(0xFFF59E0B);
 
-  var firstnameController = TextEditingController();
-
-  var lastnameController = TextEditingController();
-
-  var addressController = TextEditingController();
-
-  var emailController = TextEditingController();
-
-  var passwordController = TextEditingController();
-
-  var userbalanceController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final firstnameController = TextEditingController();
+  final lastnameController = TextEditingController();
+  final addressController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final isObscure = true.obs;
 
   validateUserEmail() async {
     try {
       var res = await http.post(
         Uri.parse(API.validateEmail),
-        body: {
-          'user_email': emailController.text.trim(),
-        },
+        body: {'user_email': emailController.text.trim()},
       );
 
-      if (res.statusCode ==
-          200) //from flutter app the connection with api to server - success
-      {
-        var resBodyOfValidateEmail = jsonDecode(res.body);
-
-        if (resBodyOfValidateEmail['emailFound'] == true) {
-          Fluttertoast.showToast(
-              msg: "Email is already in use. Try another email.");
+      if (res.statusCode == 200) {
+        var resBody = jsonDecode(res.body);
+        if (resBody['emailFound'] == true) {
+          Fluttertoast.showToast(msg: "Email is already in use. Try another email.");
         } else {
-          //register & save new user record to database
           registerAndSaveUserRecord();
         }
       } else {
-        Fluttertoast.showToast(msg: "Status is not 200,email");
+        Fluttertoast.showToast(msg: "Connection error. Please try again.");
       }
     } catch (e) {
-      // print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
     }
   }
 
   registerAndSaveUserRecord() async {
-    //sending this userModel to the database as json format
     User userModel = User(
       user_id: 1,
       user_firstname: firstnameController.text.trim(),
@@ -72,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       user_address: addressController.text.trim(),
       user_email: emailController.text.trim(),
       user_password: passwordController.text.trim(),
-      user_balance: userbalanceController.text.trim(),
+      user_balance: "0",
     );
 
     try {
@@ -82,264 +69,265 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (res.statusCode == 200) {
-        var resBodyOfSignUp = jsonDecode(res.body);
-        if (resBodyOfSignUp['success'] == true) {
+        var resBody = jsonDecode(res.body);
+        if (resBody['success'] == true) {
           Fluttertoast.showToast(
-              msg:
-                  "Congratulations, you are signed-up successfully, Login to your account");
-
-          setState(() {
-            firstnameController.clear();
-            lastnameController.clear();
-            addressController.clear();
-            emailController.clear();
-            passwordController.clear();
-          });
-          Get.to(() => LoginScreen());
+              msg: "Account created successfully! Please sign in.");
+          firstnameController.clear();
+          lastnameController.clear();
+          addressController.clear();
+          emailController.clear();
+          passwordController.clear();
+          Get.off(() => LoginScreen());
         } else {
-          Fluttertoast.showToast(msg: "Error Occurred, Try Again.");
+          Fluttertoast.showToast(msg: "Error occurred. Please try again.");
         }
       } else {
-        Fluttertoast.showToast(msg: "Status is not 200");
+        Fluttertoast.showToast(msg: "Connection error. Please try again.");
       }
     } catch (e) {
-      // print(e.toString());
       Fluttertoast.showToast(msg: e.toString());
     }
+  }
+
+  Widget _buildField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    String? Function(String?)? validator,
+    bool obscure = false,
+    Widget? suffix,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        obscureText: obscure,
+        keyboardType: keyboardType,
+        style: GoogleFonts.spaceGrotesk(fontSize: 14, color: Colors.black87),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          prefixIcon: Icon(icon, color: primary, size: 20),
+          hintText: hint,
+          hintStyle: GoogleFonts.spaceGrotesk(color: Colors.black38, fontSize: 14),
+          suffixIcon: suffix,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //hello again
-
-                  const SizedBox(height: 20),
-
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.asset(
-                      "lib/images/logo.png",
-                      width: 100,
-                    ),
-                  ),
-
-                  const SizedBox(height: 15),
-
-                  const Text(
-                    'Register with your details below',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 17,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  //firstname
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextFormField(
-                          controller: firstnameController,
-                          validator: (val) =>
-                              val == "" ? "Please write your First Name" : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Firstname',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  //lastname
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextFormField(
-                          controller: lastnameController,
-                          validator: (val) =>
-                              val == "" ? "Please write your Last Name" : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Lastname',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  //address
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextFormField(
-                          controller: addressController,
-                          validator: (val) =>
-                              val == "" ? "Please write your Address" : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Address',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  //email
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextFormField(
-                          controller: emailController,
-                          validator: (val) =>
-                              val == "" ? "Please write your Email" : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Email',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  //password
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextFormField(
-                          controller: passwordController,
-                          validator: (val) =>
-                              val == "" ? "Please write your Password" : null,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Password',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  //signin
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: InkWell(
-                      onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          validateUserEmail();
-                        }
-                      },
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFFF7EFE3), Color(0xFFE9F5F2)],
+          ),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: -40,
+              right: -60,
+              child: Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -60,
+              left: -40,
+              child: Container(
+                width: 220,
+                height: 220,
+                decoration: BoxDecoration(
+                  color: primary.withValues(alpha: 0.10),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned.fill(
+            child: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 32),
+                    Center(
                       child: Container(
-                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.10),
+                              blurRadius: 16,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
                         ),
-                        child: const Center(
-                          child: Text(
-                            'Sign up',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Image.asset("lib/images/logo.png", width: 80),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Create Account',
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Fill in your details to get started',
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 14,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildField(
+                            controller: firstnameController,
+                            hint: 'First name',
+                            icon: Icons.person_outline,
+                            validator: (val) => val == "" ? "Required" : null,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildField(
+                            controller: lastnameController,
+                            hint: 'Last name',
+                            icon: Icons.person_outline,
+                            validator: (val) => val == "" ? "Required" : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    _buildField(
+                      controller: addressController,
+                      hint: 'Address',
+                      icon: Icons.location_on_outlined,
+                      validator: (val) => val == "" ? "Please enter your address" : null,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildField(
+                      controller: emailController,
+                      hint: 'Email address',
+                      icon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (val) => val == "" ? "Please enter your email" : null,
+                    ),
+                    const SizedBox(height: 16),
+                    Obx(
+                      () => _buildField(
+                        controller: passwordController,
+                        hint: 'Password',
+                        icon: Icons.lock_outline,
+                        obscure: isObscure.value,
+                        validator: (val) => val == "" ? "Please enter a password" : null,
+                        suffix: GestureDetector(
+                          onTap: () => isObscure.value = !isObscure.value,
+                          child: Icon(
+                            isObscure.value ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                            color: Colors.black38,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            validateUserEmail();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Create Account',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Already a member? ',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 14,
+                              color: Colors.black54,
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () => Get.to(() => LoginScreen()),
+                            child: Text(
+                              'Sign in',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 14,
+                                color: primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-
-                  const SizedBox(height: 30),
-                  //not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Already a member?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => LoginScreen());
-                        },
-                        child: Text(
-                          'login',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 32),
+                  ],
+                ),
               ),
             ),
           ),
+          ),
+        ],
         ),
       ),
     );

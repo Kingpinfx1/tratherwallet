@@ -2,8 +2,10 @@ import 'package:tratherwallet/users/Screens/intopagescreens/intropage1.dart';
 import 'package:tratherwallet/users/Screens/intopagescreens/intropage2.dart';
 import 'package:tratherwallet/users/Screens/intopagescreens/intropage3.dart';
 import 'package:tratherwallet/users/authentication/authgate.dart';
+import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -14,8 +16,11 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
   bool onLastPage = false;
+
+  static const Color primary = Color(0xFF0F766E);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,45 +33,75 @@ class _IntroScreenState extends State<IntroScreen> {
                 onLastPage = (index == 2);
               });
             },
-            children: [
+            children: const [
               IntroPage1(),
               IntroPage2(),
               IntroPage3(),
             ],
           ),
-          Container(
-            alignment: Alignment(0, 0.75),
+          Positioned(
+            bottom: 40,
+            left: 24,
+            right: 24,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    _controller.jumpToPage(2);
+                TextButton(
+                  onPressed: () async {
+                    await RememberUserPrefs.storeIntroSeen();
+                    Get.off(() => const AuthGate());
                   },
-                  child: Text('Skip'),
+                  child: Text(
+                    'Skip',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: primary,
+                    ),
+                  ),
                 ),
                 SmoothPageIndicator(
                   controller: _controller,
                   count: 3,
+                  effect: const WormEffect(
+                    activeDotColor: primary,
+                    dotColor: Color(0xFFE0E0E0),
+                    dotHeight: 8,
+                    dotWidth: 8,
+                  ),
                 ),
-
-                //next ot done
-                onLastPage
-                    ? GestureDetector(
-                        onTap: () {
-                          Get.to(() => AuthGate());
-                        },
-                        child: Text('Done'),
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          _controller.nextPage(
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.easeIn,
-                          );
-                        },
-                        child: Text('Next'),
-                      ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (onLastPage) {
+                      await RememberUserPrefs.storeIntroSeen();
+                      Get.off(() => const AuthGate());
+                    } else {
+                      _controller.nextPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeIn,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    onLastPage ? 'Get Started' : 'Next →',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

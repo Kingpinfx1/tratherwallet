@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:convert';
 
 import 'package:tratherwallet/users/Screens/nav_screen.dart';
+import 'package:tratherwallet/users/authentication/forgot_password.dart';
 import 'package:tratherwallet/users/authentication/register.dart';
 import 'package:tratherwallet/users/userPreferences/user_preferences.dart';
 import 'package:flutter/material.dart';
@@ -22,62 +21,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var formKey = GlobalKey<FormState>();
+  static const Color primary = Color(0xFF0F766E);
+  static const Color accent = Color(0xFFF59E0B);
 
-  var emailController = TextEditingController();
-
-  var passwordController = TextEditingController();
-
-  var isObsecure = true.obs;
-
-  // loginUserNow() async {
-  //   try {
-  //     var res = await http.post(
-  //       Uri.parse(API.login),
-  //       body: {
-  //         "user_email": emailController.text.trim(),
-  //         "user_password": passwordController.text.trim(),
-  //       },
-  //     );
-
-  //     if (res.statusCode ==
-  //         200) //from flutter app the connection with api to server - success
-  //     {
-  //       var resBodyOfLogin = jsonDecode(res.body);
-  //       if (resBodyOfLogin['success'] == true) {
-  //         Fluttertoast.showToast(msg: " You're logged-in Successfully.");
-
-  //         User userInfo = User.fromJson(resBodyOfLogin["userData"]);
-
-  //         //save userInfo to local Storage using Shared Prefrences
-  //         await RememberUserPrefs.storeUserInfo(userInfo);
-
-  //         Future.delayed(const Duration(milliseconds: 2000), () {
-  //           Get.to(() => UserNavScreen());
-  //         });
-  //       } else {
-  //         Fluttertoast.showToast(
-  //             msg:
-  //                 "Incorrect Credentials.\nPlease write correct password or email and Try Again.");
-  //       }
-  //     } else {
-  //       Fluttertoast.showToast(msg: "Status is not 200");
-  //     }
-  //   } catch (errorMsg) {
-  //     Fluttertoast.showToast(msg: '$errorMsg');
-  //   }
-  // }
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final isObscure = true.obs;
 
   loginUserNow() async {
-    // Show loading dialog
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+      builder: (_) => const Center(child: CircularProgressIndicator(color: primary)),
     );
 
     try {
@@ -89,243 +45,253 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
 
-      Navigator.pop(context); // Close the loading dialog
+      Navigator.pop(context);
 
       if (res.statusCode == 200) {
         var resBodyOfLogin = jsonDecode(res.body);
         if (resBodyOfLogin['success'] == true) {
           Fluttertoast.showToast(msg: "You're logged in successfully.");
-
           User userInfo = User.fromJson(resBodyOfLogin["userData"]);
-
-          // Save userInfo to local storage
           await RememberUserPrefs.storeUserInfo(userInfo);
-
-          Future.delayed(const Duration(milliseconds: 2000), () {
-            Get.to(() => UserNavScreen());
+          Future.delayed(const Duration(milliseconds: 1500), () {
+            Get.off(() => UserNavScreen());
           });
         } else {
-          Fluttertoast.showToast(
-              msg: "Incorrect credentials. Please try again.");
+          Fluttertoast.showToast(msg: "Incorrect credentials. Please try again.");
         }
       } else {
-        Fluttertoast.showToast(msg: "Status code is not 200.");
+        Fluttertoast.showToast(msg: "Connection error. Please try again.");
       }
-    } catch (errorMsg) {
-      Navigator.pop(context); // Close the loading dialog in case of an error
-      Fluttertoast.showToast(msg: '$errorMsg');
+    } catch (e) {
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: e.toString());
     }
+  }
+
+  Widget _buildField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    String? Function(String?)? validator,
+    bool obscure = false,
+    Widget? suffix,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        obscureText: obscure,
+        style: GoogleFonts.spaceGrotesk(fontSize: 14, color: Colors.black87),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          prefixIcon: Icon(icon, color: primary, size: 20),
+          hintText: hint,
+          hintStyle: GoogleFonts.spaceGrotesk(color: Colors.black38, fontSize: 14),
+          suffixIcon: suffix,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.asset(
-                      "lib/images/logo.png",
-                      width: 100,
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  Text(
-                    'Welcome!',
-                    style: GoogleFonts.bebasNeue(
-                      fontSize: 54,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextFormField(
-                          controller: emailController,
-                          validator: (val) =>
-                              val == "" ? "Please write your email" : null,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Email',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  //password
-
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20.0),
-                          child: TextFormField(
-                            controller: passwordController,
-                            validator: (val) =>
-                                val == "" ? "Please write your Password" : null,
-                            obscureText: isObsecure.value,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Password',
-                              suffixIcon: Obx(
-                                () => GestureDetector(
-                                  onTap: () {
-                                    isObsecure.value = !isObsecure.value;
-                                  },
-                                  child: Icon(
-                                    isObsecure.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.deepPurple,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     Padding(
-                  //       padding: EdgeInsets.symmetric(horizontal: 25),
-                  //       child: GestureDetector(
-                  //         onTap: () {
-                  //           Get.to(ForgotPassword());
-                  //         },
-                  //         child: Text(
-                  //           'Forgot Password?',
-                  //           style: TextStyle(
-                  //             color: Colors.blue,
-                  //             fontWeight: FontWeight.bold,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-
-                  const SizedBox(height: 20),
-
-                  //signin
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: GestureDetector(
-                      onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          loginUserNow();
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.deepPurple,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Sign in',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 30),
-                  //not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Not a member?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => RegisterScreen());
-                        },
-                        child: Text(
-                          'Register now',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  //not a member? register now
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Text(
-                  //       'Admin?',
-                  //       style: TextStyle(
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //     SizedBox(width: 5),
-                  //     GestureDetector(
-                  //       onTap: () {
-                  //         Get.to(() => AdminLogin());
-                  //       },
-                  //       child: Text(
-                  //         'Login',
-                  //         style: TextStyle(
-                  //           color: Colors.blue,
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                ],
+      backgroundColor: const Color(0xFFF7EFE3),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFF7EFE3), Color(0xFFE9F5F2)],
+                ),
               ),
             ),
           ),
-        ),
+          Positioned(
+            top: -40,
+            right: -60,
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -60,
+            left: -40,
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: BoxDecoration(
+                color: primary.withValues(alpha: 0.10),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.10),
+                                blurRadius: 16,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: Image.asset("lib/images/logo.png", width: 90),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+                      Text(
+                        'Welcome Back',
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Sign in to your account to continue',
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 14,
+                          color: Colors.black45,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      _buildField(
+                        controller: emailController,
+                        hint: 'Email address',
+                        icon: Icons.email_outlined,
+                        validator: (val) => val == "" ? "Please enter your email" : null,
+                      ),
+                      const SizedBox(height: 16),
+                      Obx(
+                        () => _buildField(
+                          controller: passwordController,
+                          hint: 'Password',
+                          icon: Icons.lock_outline,
+                          obscure: isObscure.value,
+                          validator: (val) => val == "" ? "Please enter your password" : null,
+                          suffix: GestureDetector(
+                            onTap: () => isObscure.value = !isObscure.value,
+                            child: Icon(
+                              isObscure.value ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              color: Colors.black38,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () => Get.to(() => ForgotPassword()),
+                          child: Text(
+                            'Forgot Password?',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 13,
+                              color: primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              loginUserNow();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            'Sign In',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Not a member? ',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 14,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => Get.to(() => RegisterScreen()),
+                              child: Text(
+                                'Register now',
+                                style: GoogleFonts.spaceGrotesk(
+                                  fontSize: 14,
+                                  color: primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
