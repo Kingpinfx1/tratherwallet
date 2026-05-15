@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:tratherwallet/users/Screens/withdrawal_history.dart';
 import 'package:tratherwallet/users/authentication/login.dart';
 import 'package:tratherwallet/users/model/user_model.dart';
 import 'package:tratherwallet/users/userPreferences/current_user.dart';
@@ -335,6 +336,11 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   child: Column(
                     children: [
+                      _SettingsTile(
+                        icon: Icons.history,
+                        title: 'Withdrawal History',
+                        onTap: () => Get.to(() => const WithdrawalHistoryScreen()),
+                      ),
                       _SettingsTile(
                         icon: Icons.notifications,
                         title: 'Privacy Policy',

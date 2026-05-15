@@ -17,6 +17,10 @@ class API {
 
   static const deleteAccount = "$hostConnectUser/deleteaccount.php";
 
+  static const withdrawalRequest = "$hostConnectUser/withdrawal_request.php";
+
+  static const checkWithdrawals = "$hostConnectUser/check_withdrawals.php";
+
   // admin
   static const adminLogin = "$hostConnectAdmin/login.php";
 
@@ -33,4 +37,8 @@ class API {
   static const adminUploadWallet = "$hostConnectAdmin/adminuploadwallet.php";
 
   static const readAllWallets = "$hostConnectAdmin/readallwallets.php";
+
+  static const readWithdrawals = "$hostConnectAdmin/read_withdrawals.php";
+
+  static const updateWithdrawal = "$hostConnectAdmin/update_withdrawal.php";
 }

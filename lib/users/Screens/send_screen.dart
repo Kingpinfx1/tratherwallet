@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import "dart:convert";
+
+import "package:tratherwallet/api_connection/api_connection.dart";
 import "package:tratherwallet/users/Screens/sendcreencomp/send_buttons.dart";
 import "package:tratherwallet/users/controllers/coin_controller.dart";
 import "package:tratherwallet/users/userPreferences/current_user.dart";
 import "package:flutter/material.dart";
-import "package:fluttertoast/fluttertoast.dart";
 import "package:get/get.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:http/http.dart" as http;
 
 class SendScreen extends StatefulWidget {
   const SendScreen({super.key});
@@ -24,6 +27,81 @@ class _SendScreenState extends State<SendScreen> {
   var sendAmount = '';
 
   final walletController = TextEditingController();
+
+  Future<void> _submitWithdrawal() async {
+    final double? amount = double.tryParse(sendAmount);
+    final double balance =
+        double.tryParse(currentUser.user.user_balance) ?? 0;
+
+    if (amount == null || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid amount')),
+      );
+      return;
+    }
+    if (amount > balance) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Amount exceeds your balance')),
+      );
+      return;
+    }
+
+    try {
+      var res = await http.post(Uri.parse(API.withdrawalRequest), body: {
+        'user_id': currentUser.user.user_id.toString(),
+        'amount': sendAmount,
+        'wallet_address': walletController.text.trim(),
+      });
+
+      if (res.statusCode == 200) {
+        var body = jsonDecode(res.body);
+        if (body['success'] == true) {
+          Get.back(); // close bottom sheet
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                'Withdrawal Submitted',
+                style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w700),
+              ),
+              content: Text(
+                'Your request is under review. Check Withdrawal History in your profile for status updates.',
+                style: GoogleFonts.spaceGrotesk(color: Colors.black54),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(
+                    'OK',
+                    style: GoogleFonts.spaceGrotesk(
+                      color: const Color(0xFF0F766E),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(body['message'] ?? 'Submission failed')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Server error ${res.statusCode}: ${res.body.substring(0, res.body.length.clamp(0, 100))}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
 
   void _showBottomPanel(BuildContext context) {
     final Color primary = const Color(0xFF0F766E);
@@ -75,13 +153,7 @@ class _SendScreenState extends State<SendScreen> {
                 ElevatedButton.icon(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      Fluttertoast.showToast(
-                        msg:
-                            'Please contact support to activate withdrawal function',
-                        gravity: ToastGravity.CENTER,
-                        toastLength: Toast.LENGTH_LONG,
-                        fontSize: 18,
-                      );
+                      _submitWithdrawal();
                     }
                   },
                   style: ElevatedButton.styleFrom(

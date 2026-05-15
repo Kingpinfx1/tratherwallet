@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:tratherwallet/users/Screens/nav_screen.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:tratherwallet/admin/admin_login.dart';
 import '../../api_connection/api_connection.dart';
 import '../model/user_model.dart';
 
@@ -28,6 +30,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final isObscure = true.obs;
+
+  int _adminTapCount = 0;
+  Timer? _adminTapTimer;
+
+  void _handleAdminTap() {
+    _adminTapTimer?.cancel();
+    _adminTapCount++;
+    if (_adminTapCount >= 5) {
+      _adminTapCount = 0;
+      Get.to(() => AdminLogin());
+    } else {
+      _adminTapTimer = Timer(const Duration(seconds: 3), () {
+        _adminTapCount = 0;
+      });
+    }
+  }
 
   loginUserNow() async {
     showDialog(
@@ -157,20 +175,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const SizedBox(height: 20),
                       Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.10),
-                                blurRadius: 16,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: Image.asset("lib/images/logo.png", width: 90),
+                        child: GestureDetector(
+                          onTap: _handleAdminTap,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.10),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: Image.asset("lib/images/logo.png", width: 90),
+                            ),
                           ),
                         ),
                       ),

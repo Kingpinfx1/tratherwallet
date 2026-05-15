@@ -4,6 +4,7 @@ import 'package:tratherwallet/admin/admin_login.dart';
 import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/admin/admin_screens/allusers.dart';
 import 'package:tratherwallet/admin/admin_screens/deposit_methods.dart';
+import 'package:tratherwallet/admin/admin_screens/withdrawal_requests.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -58,6 +59,13 @@ class AdminHome extends StatelessWidget {
                   title: Text('Deposit methods'),
                   onTap: () {
                     Get.to(() => DepositMethods());
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.swap_horiz),
+                  title: Text('Withdrawals'),
+                  onTap: () {
+                    Get.to(() => AdminWithdrawalRequests());
                   },
                 ),
                 ListTile(
@@ -154,6 +162,46 @@ class AdminHome extends StatelessWidget {
                   //     ],
                   //   ),
                   // ),
+
+                  //Withdrawals
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => AdminWithdrawalRequests());
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: const Offset(0, 2),
+                                color: Colors.grey.shade500,
+                                spreadRadius: 1,
+                                blurRadius: 2)
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.swap_horiz,
+                                color: Colors.grey.shade500,
+                              )),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Withdrawals',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
 
                   //Manage deposits
                   GestureDetector(

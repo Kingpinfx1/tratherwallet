@@ -7,3 +7,14 @@ ALTER TABLE `users_table`
 -- 2. Add admin_token column to admins_table (for admin session auth)
 ALTER TABLE `admins_table`
   ADD COLUMN `admin_token` VARCHAR(100) DEFAULT NULL;
+
+-- 3. Withdrawal requests table
+CREATE TABLE IF NOT EXISTS `withdrawal_requests` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `amount` DECIMAL(15,2) NOT NULL,
+  `wallet_address` VARCHAR(255) NOT NULL,
+  `status` ENUM('pending','completed','rejected') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
