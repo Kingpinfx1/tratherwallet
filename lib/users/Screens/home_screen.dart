@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:intl/intl.dart';
 import 'package:tratherwallet/users/Screens/crypto_screen.dart';
 import 'package:tratherwallet/users/Screens/send_screen.dart';
 import 'package:tratherwallet/users/Screens/wallet_screen.dart';
@@ -38,49 +39,49 @@ class _HomeScreenState extends State<HomeScreen> {
     final Color accent = const Color(0xFFF59E0B);
 
     return Scaffold(
-      backgroundColor: surface,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFF7EFE3),
-                      Color(0xFFE9F5F2),
-                    ],
-                  ),
+      backgroundColor: const Color(0xFFF7EFE3),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFFF7EFE3),
+                    Color(0xFFE9F5F2),
+                  ],
                 ),
               ),
             ),
-            Positioned(
-              top: -40,
-              right: -60,
-              child: Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  color: accent.withOpacity(0.12),
-                  shape: BoxShape.circle,
-                ),
+          ),
+          Positioned(
+            top: -40,
+            right: -60,
+            child: Container(
+              width: 220,
+              height: 220,
+              decoration: BoxDecoration(
+                color: accent.withOpacity(0.12),
+                shape: BoxShape.circle,
               ),
             ),
-            Positioned(
-              bottom: -60,
-              left: -40,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: primary.withOpacity(0.10),
-                  shape: BoxShape.circle,
-                ),
+          ),
+          Positioned(
+            bottom: -60,
+            left: -40,
+            child: Container(
+              width: 240,
+              height: 240,
+              decoration: BoxDecoration(
+                color: primary.withOpacity(0.10),
+                shape: BoxShape.circle,
               ),
             ),
-            ListView(
+          ),
+          SafeArea(
+            child: ListView(
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Obx(
                                     () => balanceController.showBalance.value
                                         ? Text(
-                                            "\$ ${currentUser.user.user_balance}",
+                                            "\$ ${NumberFormat('#,##0.00').format(double.tryParse(currentUser.user.user_balance) ?? 0)}",
                                             style: GoogleFonts.spaceGrotesk(
                                               fontSize: 28,
                                               fontWeight: FontWeight.w700,
@@ -452,9 +453,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
           ]),
-          ],
-        ),
-      ),
+          ),    // SafeArea
+          ],    // Stack children
+        ),      // Stack
     );
   }
 }

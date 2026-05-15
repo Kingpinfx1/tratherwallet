@@ -108,74 +108,106 @@ class _SendScreenState extends State<SendScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
-          height: 300,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF6F3EE),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                const SizedBox(height: 12),
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(40),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF6F3EE),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+            ),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 12),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(40),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: TextFormField(
-                    controller: walletController,
-                    validator: (val) =>
-                        val == "" ? "Please enter wallet address" : null,
-                    decoration: InputDecoration(
-                      hintText: 'Enter wallet address',
-                      hintStyle: GoogleFonts.spaceGrotesk(
-                        color: Colors.black45,
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Recipient Wallet Address',
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextFormField(
+                      controller: walletController,
+                      autofocus: true,
+                      validator: (val) =>
+                          val == "" ? "Please enter wallet address" : null,
+                      style: GoogleFonts.spaceGrotesk(fontSize: 14),
+                      decoration: InputDecoration(
+                        hintText: 'e.g. 1A2b3C4d5E6f...',
+                        hintStyle: GoogleFonts.spaceGrotesk(
+                          color: Colors.black38,
+                          fontSize: 14,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: const Icon(
+                          Icons.account_balance_wallet_outlined,
+                          color: Color(0xFF0F766E),
+                          size: 20,
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      _submitWithdrawal();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            _submitWithdrawal();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        icon: const Icon(Icons.send, size: 18),
+                        label: Text(
+                          'Send Crypto',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  icon: const Icon(Icons.send, size: 18),
-                  label: Text(
-                    'Send Crypto',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         );

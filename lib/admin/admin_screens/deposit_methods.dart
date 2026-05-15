@@ -10,6 +10,7 @@ import 'package:tratherwallet/users/model/payment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,6 +22,11 @@ class DepositMethods extends StatefulWidget {
 }
 
 class _DepositMethodsState extends State<DepositMethods> {
+  static const Color bg = Color(0xFF0F172A);
+  static const Color surface = Color(0xFF1E293B);
+  static const Color teal = Color(0xFF0F766E);
+  static const Color border = Color(0xFF334155);
+
   final ImagePicker _picker = ImagePicker();
 
   XFile? pickedImageXFile;
@@ -48,8 +54,8 @@ class _DepositMethodsState extends State<DepositMethods> {
           );
           return "Deleted";
         } else {
-          Fluttertoast.showToast(msg: "Failed to delete  ");
-          return "Failed to update user ";
+          Fluttertoast.showToast(msg: "Failed to delete");
+          return "Failed to delete";
         }
       } else {
         Fluttertoast.showToast(msg: "Status Code is not 200");
@@ -88,108 +94,105 @@ class _DepositMethodsState extends State<DepositMethods> {
 
   captureImageWithPhoneCamera() async {
     pickedImageXFile = await _picker.pickImage(source: ImageSource.camera);
-
     Get.back();
-
     setState(() => pickedImageXFile);
   }
 
   pickImageFromPhoneGallery() async {
     pickedImageXFile = await _picker.pickImage(source: ImageSource.gallery);
-
     Get.back();
-
     setState(() => pickedImageXFile);
   }
 
   showDialogBoxForImagePickingAndCapturing() {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            backgroundColor: Colors.black45,
-            title: const Text(
-              "Upload Wallet Qr",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          backgroundColor: surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            "Upload Wallet QR",
+            style: GoogleFonts.spaceGrotesk(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          children: [
+            SimpleDialogOption(
+              onPressed: () => captureImageWithPhoneCamera(),
+              child: Text(
+                "Capture with Camera",
+                style: GoogleFonts.spaceGrotesk(color: Colors.white70),
               ),
             ),
-            children: [
-              SimpleDialogOption(
-                onPressed: () {
-                  captureImageWithPhoneCamera();
-                },
-                child: const Text(
-                  "Capture with Phone Camera",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+            SimpleDialogOption(
+              onPressed: () => pickImageFromPhoneGallery(),
+              child: Text(
+                "Pick from Gallery",
+                style: GoogleFonts.spaceGrotesk(color: Colors.white70),
               ),
-              SimpleDialogOption(
-                onPressed: () {
-                  pickImageFromPhoneGallery();
-                },
-                child: const Text(
-                  "Pick Image From Phone Gallery",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Get.back(),
+              child: Text(
+                "Cancel",
+                style: GoogleFonts.spaceGrotesk(color: Colors.red),
               ),
-              SimpleDialogOption(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text(
-                  "Cancel",
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget defaultScreen() {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade200,
-        title: Text('Add Payment Methods'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add_photo_alternate,
-              size: 100,
-              color: Colors.deepPurple,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                showDialogBoxForImagePickingAndCapturing();
-              },
-              style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                Colors.deepPurple,
-              )),
-              child: Text(
-                'Upload Qr code',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            SizedBox(height: 30),
-            Expanded(child: allPaymentMethods()),
-          ],
+        backgroundColor: bg,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'Deposit Methods',
+          style: GoogleFonts.spaceGrotesk(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                Icon(Icons.add_photo_alternate, size: 64, color: teal),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: showDialogBoxForImagePickingAndCapturing,
+                    icon: const Icon(Icons.upload),
+                    label: Text(
+                      'Upload QR Code',
+                      style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w600),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: teal,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(child: allPaymentMethods()),
+        ],
       ),
     );
   }
@@ -216,7 +219,6 @@ class _DepositMethodsState extends State<DepositMethods> {
 
     Map<String, dynamic> jsonRes = json.decode(resultFromImgurApi);
     (jsonRes["data"]["deletehash"]).toString();
-    // String deleteHash =
     saveItemInfoToDatabase();
   }
 
@@ -261,22 +263,18 @@ class _DepositMethodsState extends State<DepositMethods> {
 
   Widget uploadWalletDetails() {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: bg,
       appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                Colors.white,
-              ],
-            ),
-          ),
-        ),
+        backgroundColor: bg,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         automaticallyImplyLeading: false,
-        title: const Text(
-          "Upload wallet details",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "Upload Wallet Details",
+          style: GoogleFonts.spaceGrotesk(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -286,24 +284,21 @@ class _DepositMethodsState extends State<DepositMethods> {
               walletNameController.clear();
               walletDescriptionController.clear();
             });
-
             Get.to(() => DepositMethods());
           },
-          icon: const Icon(
-            Icons.clear,
-          ),
+          icon: const Icon(Icons.clear, color: Colors.white),
         ),
         actions: [
           TextButton(
             onPressed: () {
               Fluttertoast.showToast(msg: "Uploading now...");
-
               uploadItemImage();
             },
-            child: const Text(
+            child: Text(
               "Done",
-              style: TextStyle(
-                color: Colors.deepPurple,
+              style: GoogleFonts.spaceGrotesk(
+                color: teal,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -311,159 +306,99 @@ class _DepositMethodsState extends State<DepositMethods> {
       ),
       body: ListView(
         children: [
-          //image
           Container(
             height: MediaQuery.of(context).size.height * 0.4,
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: FileImage(
-                  File(pickedImageXFile!.path),
-                ),
+                image: FileImage(File(pickedImageXFile!.path)),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-
-          //upload item form
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 8),
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: formKey,
               child: Column(
                 children: [
-                  //email-password-login button
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        //wallet name
-                        TextFormField(
-                          controller: walletNameController,
-                          validator: (val) =>
-                              val == "" ? "Please write wallet name" : null,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.title,
-                              color: Colors.deepPurple,
-                            ),
-                            hintText: "Wallet name...",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 6,
-                            ),
-                            fillColor: Colors.white,
-                            filled: true,
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        //wallet description
-                        TextFormField(
-                          controller: walletDescriptionController,
-                          validator: (val) => val == ""
-                              ? "Please write wallet description"
-                              : null,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(
-                              Icons.rate_review,
-                              color: Colors.deepPurple,
-                            ),
-                            hintText: "Wallet address...",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 6,
-                            ),
-                            fillColor: Colors.white,
-                            filled: true,
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        //button
-                        Material(
-                          color: Colors.deepPurple,
-                          borderRadius: BorderRadius.circular(30),
-                          child: InkWell(
-                            onTap: () {
-                              if (formKey.currentState!.validate()) {
-                                Fluttertoast.showToast(msg: "Uploading now...");
-
-                                uploadItemImage();
-                              }
-                            },
-                            borderRadius: BorderRadius.circular(30),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 28,
-                              ),
-                              child: Text(
-                                "Upload Now",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                  Container(
+                    decoration: BoxDecoration(
+                      color: surface,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: border),
+                    ),
+                    child: TextFormField(
+                      controller: walletNameController,
+                      validator: (val) =>
+                          val == "" ? "Please write wallet name" : null,
+                      style: GoogleFonts.spaceGrotesk(
+                          color: Colors.white, fontSize: 14),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 16),
+                        prefixIcon: const Icon(Icons.title,
+                            color: Color(0xFF0F766E), size: 20),
+                        hintText: 'Wallet name...',
+                        hintStyle: GoogleFonts.spaceGrotesk(
+                            color: Colors.white38, fontSize: 14),
+                      ),
                     ),
                   ),
-
-                  const SizedBox(
-                    height: 16,
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: surface,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: border),
+                    ),
+                    child: TextFormField(
+                      controller: walletDescriptionController,
+                      validator: (val) =>
+                          val == "" ? "Please write wallet address" : null,
+                      style: GoogleFonts.spaceGrotesk(
+                          color: Colors.white, fontSize: 14),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 16),
+                        prefixIcon: const Icon(
+                            Icons.account_balance_wallet_outlined,
+                            color: Color(0xFF0F766E),
+                            size: 20),
+                        hintText: 'Wallet address...',
+                        hintStyle: GoogleFonts.spaceGrotesk(
+                            color: Colors.white38, fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          Fluttertoast.showToast(msg: "Uploading now...");
+                          uploadItemImage();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: teal,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: Text(
+                        'Upload Now',
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -475,151 +410,95 @@ class _DepositMethodsState extends State<DepositMethods> {
   }
 
   Widget allPaymentMethods() {
-    return ListView(
-      children: [
-        FutureBuilder(
-          future: getAllPaymentMethods(),
-          builder: (context, AsyncSnapshot<List<PaymentMethods>> dataSnapShot) {
-            if (dataSnapShot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (dataSnapShot.data == null) {
-              return const Center(
-                child: Text(
-                  "No Payment Method found",
-                ),
-              );
-            }
-            if (dataSnapShot.data!.isNotEmpty) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: 150),
-                  itemCount: dataSnapShot.data!.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    //instance of items from model
+    return FutureBuilder(
+      future: getAllPaymentMethods(),
+      builder: (context, AsyncSnapshot<List<PaymentMethods>> dataSnapShot) {
+        if (dataSnapShot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF0F766E)),
+          );
+        }
+        if (dataSnapShot.data == null || dataSnapShot.data!.isEmpty) {
+          return Center(
+            child: Text(
+              "No deposit methods found.",
+              style: GoogleFonts.spaceGrotesk(color: Colors.white60),
+            ),
+          );
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+          itemCount: dataSnapShot.data!.length,
+          itemBuilder: (context, index) {
+            PaymentMethods eachPaymentMethod = dataSnapShot.data![index];
 
-                    PaymentMethods eachPaymentMethod =
-                        dataSnapShot.data![index];
-
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.fromLTRB(
-                        index == 0 ? 16 : 8,
-                        2,
-                        index == dataSnapShot.data!.length - 1 ? 16 : 8,
-                        2,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.grey.shade100,
-                        boxShadow: const [
-                          BoxShadow(
-                            offset: Offset(0, 3),
-                            blurRadius: 3,
-                            color: Colors.grey,
+            return Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: border),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          eachPaymentMethod.name.toString(),
+                          style: GoogleFonts.spaceGrotesk(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // ID and Email/name column
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      eachPaymentMethod.id.toString(),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          eachPaymentMethod.name.toString(),
-                                          style: const TextStyle(
-                                            color: Colors.blueAccent,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          eachPaymentMethod.description
-                                              .toString(),
-                                          style: const TextStyle(
-                                            color: Colors.blue,
-                                            fontSize: 9,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                // Delete and edit row
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        deletePaymentMethod(eachPaymentMethod);
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red.shade300,
-                                      ),
-                                    ),
-                                    // const SizedBox(width: 2),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                EditPaymentScreen(
-                                              eachPaymentMethod:
-                                                  eachPaymentMethod,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Colors.black38,
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
                         ),
+                        const SizedBox(height: 2),
+                        Text(
+                          eachPaymentMethod.description.toString(),
+                          style: GoogleFonts.spaceGrotesk(
+                            color: Colors.white38,
+                            fontSize: 11,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () =>
+                            deletePaymentMethod(eachPaymentMethod),
+                        icon: Icon(Icons.delete,
+                            color: Colors.red.shade400, size: 20),
                       ),
-                    );
-                  },
-                ),
-              );
-            } else {
-              return const Center(
-                child: Text("Empty, No Data."),
-              );
-            }
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPaymentScreen(
+                                eachPaymentMethod: eachPaymentMethod,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit,
+                            color: Color(0xFF0F766E), size: 20),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
           },
-        ),
-      ],
+        );
+      },
     );
   }
 

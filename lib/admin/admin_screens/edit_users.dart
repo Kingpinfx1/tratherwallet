@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:tratherwallet/users/model/user_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class EditUsersScreen extends StatefulWidget {
@@ -22,23 +23,23 @@ class EditUsersScreen extends StatefulWidget {
 }
 
 class _EditUsersScreenState extends State<EditUsersScreen> {
+  static const Color bg = Color(0xFF0F172A);
+  static const Color surface = Color(0xFF1E293B);
+  static const Color teal = Color(0xFF0F766E);
+  static const Color border = Color(0xFF334155);
+
   late TextEditingController _balanceController;
-  // Add controllers for other fields as needed
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with user data
     _balanceController =
         TextEditingController(text: widget.eachUserData.user_balance);
-    // Initialize controllers for other fields as needed
   }
 
   @override
   void dispose() {
-    // Dispose controllers
     _balanceController.dispose();
-    // Dispose controllers for other fields as needed
     super.dispose();
   }
 
@@ -77,42 +78,76 @@ class _EditUsersScreenState extends State<EditUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade200,
-        title: Text('Edit User ${widget.eachUserData.user_lastname}'),
+        backgroundColor: bg,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'Edit ${widget.eachUserData.user_lastname}',
+          style: GoogleFonts.spaceGrotesk(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24),
         children: [
-          TextFormField(
-            controller: _balanceController,
-            decoration: InputDecoration(
-              labelText: 'Balance',
+          Text(
+            'Balance (USD)',
+            style: GoogleFonts.spaceGrotesk(
+              color: Colors.white60,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              updateUser(widget.eachUserData);
-
-              Get.to(() => AdminHome());
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                (Set<WidgetState> states) {
-                  if (states.contains(WidgetState.pressed)) {
-                    // return the color when pressed
-                    return Colors.deepPurple;
-                  }
-                  // return the default color
-                  return Colors.deepPurple;
-                },
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: TextFormField(
+              controller: _balanceController,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              style: GoogleFonts.spaceGrotesk(color: Colors.white, fontSize: 14),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                prefixIcon: const Icon(Icons.attach_money,
+                    color: Color(0xFF0F766E), size: 20),
+                hintText: 'Enter balance',
+                hintStyle: GoogleFonts.spaceGrotesk(
+                    color: Colors.white38, fontSize: 14),
               ),
             ),
-            child: Text(
-              'Save Changes',
-              style: TextStyle(color: Colors.white),
+          ),
+          const SizedBox(height: 28),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                updateUser(widget.eachUserData);
+                Get.to(() => AdminHome());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: teal,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              child: Text(
+                'Save Changes',
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],

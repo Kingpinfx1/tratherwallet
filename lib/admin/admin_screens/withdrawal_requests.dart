@@ -18,6 +18,11 @@ class AdminWithdrawalRequests extends StatefulWidget {
 }
 
 class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
+  static const Color bg = Color(0xFF0F172A);
+  static const Color surface = Color(0xFF1E293B);
+  static const Color teal = Color(0xFF0F766E);
+  static const Color border = Color(0xFF334155);
+
   List<Map<String, dynamic>> _withdrawals = [];
   bool _loading = true;
 
@@ -59,7 +64,9 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
         var body = jsonDecode(res.body);
         if (body['success'] == true) {
           Fluttertoast.showToast(
-            msg: status == 'completed' ? 'Withdrawal approved' : 'Withdrawal rejected',
+            msg: status == 'completed'
+                ? 'Withdrawal approved'
+                : 'Withdrawal rejected',
             gravity: ToastGravity.CENTER,
           );
           _load();
@@ -75,9 +82,9 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
   Color _statusColor(String status) {
     switch (status) {
       case 'completed':
-        return const Color(0xFF0F766E);
+        return teal;
       case 'rejected':
-        return Colors.red;
+        return Colors.red.shade400;
       default:
         return const Color(0xFFF59E0B);
     }
@@ -86,31 +93,36 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade200,
+        backgroundColor: bg,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Withdrawal Requests',
-          style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w700),
+          style: GoogleFonts.spaceGrotesk(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white70),
             onPressed: _load,
           ),
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Color(0xFF0F766E)))
           : _withdrawals.isEmpty
               ? Center(
                   child: Text(
                     'No withdrawal requests.',
-                    style: GoogleFonts.spaceGrotesk(color: Colors.black45),
+                    style: GoogleFonts.spaceGrotesk(color: Colors.white60),
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
                   itemCount: _withdrawals.length,
                   itemBuilder: (context, index) {
                     final w = _withdrawals[index];
@@ -124,17 +136,11 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 2),
-                            blurRadius: 4,
-                            color: Colors.grey.shade400,
-                          ),
-                        ],
+                        color: surface,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: border),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,16 +151,21 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
                               Text(
                                 '\$${w['amount']}',
                                 style: GoogleFonts.spaceGrotesk(
-                                  fontSize: 18,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w700,
+                                  color: Colors.white,
                                 ),
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: _statusColor(status).withValues(alpha: 0.12),
+                                  color: _statusColor(status)
+                                      .withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: _statusColor(status)
+                                          .withValues(alpha: 0.4)),
                                 ),
                                 child: Text(
                                   status[0].toUpperCase() + status.substring(1),
@@ -167,24 +178,25 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 8),
                           Text(
                             w['user_email'] ?? '',
                             style: GoogleFonts.spaceGrotesk(
-                                fontSize: 13, color: Colors.blueAccent),
+                                fontSize: 13, color: teal),
                           ),
+                          const SizedBox(height: 2),
                           Text(
                             truncated,
                             style: GoogleFonts.spaceGrotesk(
-                                fontSize: 12, color: Colors.black54),
+                                fontSize: 12, color: Colors.white54),
                           ),
                           Text(
                             w['created_at']?.toString().substring(0, 16) ?? '',
                             style: GoogleFonts.spaceGrotesk(
-                                fontSize: 11, color: Colors.black38),
+                                fontSize: 11, color: Colors.white38),
                           ),
                           if (isPending) ...[
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 12),
                             Row(
                               children: [
                                 Expanded(
@@ -192,8 +204,7 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
                                     onPressed: () =>
                                         _updateStatus(id, 'completed'),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color(0xFF0F766E),
+                                      backgroundColor: teal,
                                       foregroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius:

@@ -8,6 +8,7 @@ import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:tratherwallet/users/model/payment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class EditPaymentScreen extends StatefulWidget {
@@ -20,23 +21,23 @@ class EditPaymentScreen extends StatefulWidget {
 }
 
 class _EditPaymentScreenState extends State<EditPaymentScreen> {
+  static const Color bg = Color(0xFF0F172A);
+  static const Color surface = Color(0xFF1E293B);
+  static const Color teal = Color(0xFF0F766E);
+  static const Color border = Color(0xFF334155);
+
   late TextEditingController _walletController;
-  // Add controllers for other fields as needed
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with user data
     _walletController =
         TextEditingController(text: widget.eachPaymentMethod.description);
-    // Initialize controllers for other fields as needed
   }
 
   @override
   void dispose() {
-    // Dispose controllers
     _walletController.dispose();
-    // Dispose controllers for other fields as needed
     super.dispose();
   }
 
@@ -57,10 +58,10 @@ class _EditPaymentScreenState extends State<EditPaymentScreen> {
             msg: "Wallet updated",
             gravity: ToastGravity.CENTER,
           );
-          return "User data updated successfully";
+          return "Wallet updated successfully";
         } else {
-          Fluttertoast.showToast(msg: "Failed to update user data");
-          return "Failed to update user data";
+          Fluttertoast.showToast(msg: "Failed to update wallet");
+          return "Failed to update wallet";
         }
       } else {
         Fluttertoast.showToast(msg: "Status Code is not 200");
@@ -75,40 +76,72 @@ class _EditPaymentScreenState extends State<EditPaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade200,
-        title: Text('Edit  ${widget.eachPaymentMethod.name}'),
+        backgroundColor: bg,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'Edit ${widget.eachPaymentMethod.name}',
+          style: GoogleFonts.spaceGrotesk(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24),
         children: [
-          TextFormField(
-            controller: _walletController,
-            decoration: InputDecoration(
-              labelText: 'Wallet Address',
+          Text(
+            'Wallet Address',
+            style: GoogleFonts.spaceGrotesk(
+              color: Colors.white60,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              updateWallet(widget.eachPaymentMethod);
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.resolveWith<Color?>(
-                (Set<WidgetState> states) {
-                  if (states.contains(WidgetState.pressed)) {
-                    // return the color when pressed
-                    return Colors.deepPurple;
-                  }
-                  // return the default color
-                  return Colors.deepPurple;
-                },
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: TextFormField(
+              controller: _walletController,
+              style: GoogleFonts.spaceGrotesk(color: Colors.white, fontSize: 14),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                prefixIcon: const Icon(Icons.account_balance_wallet_outlined,
+                    color: Color(0xFF0F766E), size: 20),
+                hintText: 'Enter wallet address',
+                hintStyle: GoogleFonts.spaceGrotesk(
+                    color: Colors.white38, fontSize: 14),
               ),
             ),
-            child: Text(
-              'Save Changes',
-              style: TextStyle(color: Colors.white),
+          ),
+          const SizedBox(height: 28),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => updateWallet(widget.eachPaymentMethod),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: teal,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              child: Text(
+                'Save Changes',
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],
