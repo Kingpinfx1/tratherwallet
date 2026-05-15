@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:tratherwallet/users/model/payment_model.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +41,12 @@ class _EditPaymentScreenState extends State<EditPaymentScreen> {
   }
 
   Future<String> updateWallet(PaymentMethods paymentMethods) async {
+    final token = await AdminPrefs.getAdminToken();
     try {
       var res = await http.post(Uri.parse(API.updateWallet), body: {
         'id': paymentMethods.id.toString(),
         'description': _walletController.text.toString(),
+        'admin_token': token,
       });
 
       if (res.statusCode == 200) {

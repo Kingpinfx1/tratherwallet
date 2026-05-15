@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:tratherwallet/admin/admin_login.dart';
+import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/admin/admin_screens/allusers.dart';
 import 'package:tratherwallet/admin/admin_screens/deposit_methods.dart';
 import 'package:flutter/cupertino.dart';
@@ -62,7 +63,8 @@ class AdminHome extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.logout),
                   title: Text('Logout'),
-                  onTap: () {
+                  onTap: () async {
+                    await AdminPrefs.removeAdminToken();
                     Get.to(() => AdminLogin());
                   },
                 ),

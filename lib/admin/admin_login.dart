@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:tratherwallet/admin/admin_home.dart';
+import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:tratherwallet/users/authentication/login.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,8 @@ class AdminLogin extends StatelessWidget {
       {
         var resBodyOfLogin = jsonDecode(res.body);
         if (resBodyOfLogin['success'] == true) {
+          await AdminPrefs.storeAdminToken(resBodyOfLogin['adminToken']);
+
           Fluttertoast.showToast(
             msg: "Admin logged-in Successfully.",
             gravity: ToastGravity.CENTER,

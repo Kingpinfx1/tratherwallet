@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:tratherwallet/admin/admin_home.dart';
+import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:tratherwallet/users/model/user_model.dart';
@@ -42,10 +43,12 @@ class _EditUsersScreenState extends State<EditUsersScreen> {
   }
 
   Future<String> updateUser(User user) async {
+    final token = await AdminPrefs.getAdminToken();
     try {
       var res = await http.post(Uri.parse(API.updateUser), body: {
         'user_id': user.user_id.toString(),
         'user_balance': _balanceController.text.toString(),
+        'admin_token': token,
       });
 
       if (res.statusCode == 200) {

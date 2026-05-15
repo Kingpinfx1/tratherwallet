@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/admin/admin_screens/edit_payments.dart';
 import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:tratherwallet/users/model/payment_model.dart';
@@ -30,9 +31,11 @@ class _DepositMethodsState extends State<DepositMethods> {
   var imageLink = "";
 
   Future<String> deletePaymentMethod(PaymentMethods paymentmethod) async {
+    final token = await AdminPrefs.getAdminToken();
     try {
       var res = await http.post(Uri.parse(API.deletePaymentMethod), body: {
         'id': paymentmethod.id.toString(),
+        'admin_token': token,
       });
 
       if (res.statusCode == 200) {
@@ -218,6 +221,7 @@ class _DepositMethodsState extends State<DepositMethods> {
   }
 
   saveItemInfoToDatabase() async {
+    final token = await AdminPrefs.getAdminToken();
     try {
       var response = await http.post(
         Uri.parse(API.adminUploadWallet),
@@ -226,6 +230,7 @@ class _DepositMethodsState extends State<DepositMethods> {
           'name': walletNameController.text.trim().toString(),
           'description': walletDescriptionController.text.trim().toString(),
           'image': imageLink.toString(),
+          'admin_token': token,
         },
       );
 

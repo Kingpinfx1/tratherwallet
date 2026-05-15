@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder<bool>(
         future: RememberUserPrefs.hasSeenIntro(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const SizedBox.shrink();
+          if (!snapshot.hasData) return const Scaffold(backgroundColor: Color(0xFFF7EFE3), body: SizedBox.shrink());
           return snapshot.data! ? const AuthGate() : const IntroScreen();
         },
       ),

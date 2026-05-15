@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/admin/admin_screens/edit_users.dart';
 import 'package:tratherwallet/api_connection/api_connection.dart';
 import 'package:tratherwallet/users/model/user_model.dart';
@@ -22,9 +23,12 @@ class _AdminGetAllUsersState extends State<AdminGetAllUsers> {
   //Get all users function
   Future<List<User>> getAllUsers() async {
     List<User> allUsersList = [];
+    final token = await AdminPrefs.getAdminToken();
 
     try {
-      var res = await http.post(Uri.parse(API.readAllUsers));
+      var res = await http.post(Uri.parse(API.readAllUsers), body: {
+        'admin_token': token,
+      });
 
       if (res.statusCode == 200) {
         var resBodyOfAllUsers = jsonDecode(res.body);
@@ -46,9 +50,11 @@ class _AdminGetAllUsersState extends State<AdminGetAllUsers> {
   }
 
   Future<String> deleteUser(User user) async {
+    final token = await AdminPrefs.getAdminToken();
     try {
       var res = await http.post(Uri.parse(API.deleteUser), body: {
         'user_id': user.user_id.toString(),
+        'admin_token': token,
       });
 
       if (res.statusCode == 200) {
