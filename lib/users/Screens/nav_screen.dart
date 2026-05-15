@@ -2,7 +2,7 @@
 
 import 'package:tratherwallet/users/Screens/account_screen.dart';
 import 'package:tratherwallet/users/Screens/crypto_screen.dart';
-import 'package:tratherwallet/users/Screens/send_screen.dart';
+import 'package:tratherwallet/users/Screens/learn_screen.dart';
 import 'package:tratherwallet/users/Screens/home_screen.dart';
 import 'package:tratherwallet/users/Screens/wallet_screen.dart';
 import 'package:tratherwallet/users/userPreferences/current_user.dart';
@@ -25,7 +25,7 @@ class _UserNavScreenState extends State<UserNavScreen> {
     HomeScreen(),
     WalletScreen(),
     CryptoScreen(),
-    SendScreen(),
+    LearnScreen(),
     AccountScreen(),
   ];
 
@@ -97,8 +97,8 @@ class _UserNavScreenState extends State<UserNavScreen> {
                           label: 'CRYPTO',
                         ),
                         BottomNavigationBarItem(
-                          icon: Icon(Icons.telegram_outlined),
-                          label: 'SEND',
+                          icon: Icon(Icons.menu_book_outlined),
+                          label: 'LEARN',
                         ),
                         BottomNavigationBarItem(
                           icon: Icon(Icons.person),
