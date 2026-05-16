@@ -218,7 +218,7 @@ class _DepositMethodsState extends State<DepositMethods> {
     var resultFromImgurApi = String.fromCharCodes(responseDataFromImgurApi);
 
     Map<String, dynamic> jsonRes = json.decode(resultFromImgurApi);
-    (jsonRes["data"]["deletehash"]).toString();
+    imageLink = jsonRes["data"]["link"].toString();
     saveItemInfoToDatabase();
   }
 
