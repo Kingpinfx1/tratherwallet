@@ -24,12 +24,35 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
   static const Color border = Color(0xFF334155);
 
   List<Map<String, dynamic>> _withdrawals = [];
+  List<Map<String, dynamic>> _filtered = [];
   bool _loading = true;
+  final _searchCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _searchCtrl.addListener(_onSearch);
     _load();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  void _onSearch() {
+    final q = _searchCtrl.text.toLowerCase().trim();
+    setState(() {
+      _filtered = q.isEmpty
+          ? _withdrawals
+          : _withdrawals.where((w) {
+              return (w['user_email'] ?? '').toLowerCase().contains(q) ||
+                  (w['amount'] ?? '').toString().contains(q) ||
+                  (w['status'] ?? '').toLowerCase().contains(q) ||
+                  (w['wallet_address'] ?? '').toLowerCase().contains(q);
+            }).toList();
+    });
   }
 
   Future<void> _load() async {
@@ -45,6 +68,7 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
           setState(() {
             _withdrawals =
                 List<Map<String, dynamic>>.from(body['withdrawals']);
+            _filtered = _withdrawals;
           });
         }
       }
@@ -114,18 +138,55 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: Color(0xFF0F766E)))
-          : _withdrawals.isEmpty
-              ? Center(
-                  child: Text(
-                    'No withdrawal requests.',
-                    style: GoogleFonts.spaceGrotesk(color: Colors.white60),
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: surface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: border),
+                    ),
+                    child: TextField(
+                      controller: _searchCtrl,
+                      style: GoogleFonts.spaceGrotesk(
+                          color: Colors.white, fontSize: 14),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
+                        prefixIcon:
+                            const Icon(Icons.search, color: Color(0xFF0F766E), size: 20),
+                        hintText: 'Search by email, amount, status…',
+                        hintStyle: GoogleFonts.spaceGrotesk(
+                            color: Colors.white38, fontSize: 13),
+                        suffixIcon: _searchCtrl.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.close,
+                                    color: Colors.white38, size: 18),
+                                onPressed: () => _searchCtrl.clear(),
+                              )
+                            : null,
+                      ),
+                    ),
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
-                  itemCount: _withdrawals.length,
-                  itemBuilder: (context, index) {
-                    final w = _withdrawals[index];
+                ),
+                Expanded(
+                  child: _filtered.isEmpty
+                      ? Center(
+                          child: Text(
+                            _withdrawals.isEmpty
+                                ? 'No withdrawal requests.'
+                                : 'No results found.',
+                            style: GoogleFonts.spaceGrotesk(color: Colors.white60),
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 80),
+                          itemCount: _filtered.length,
+                          itemBuilder: (context, index) {
+                            final w = _filtered[index];
                     final status = w['status'] ?? 'pending';
                     final isPending = status == 'pending';
                     final id = int.parse(w['id'].toString());
@@ -246,6 +307,9 @@ class _AdminWithdrawalRequestsState extends State<AdminWithdrawalRequests> {
                     );
                   },
                 ),
+                ),
+              ],
+            ),
     );
   }
 }

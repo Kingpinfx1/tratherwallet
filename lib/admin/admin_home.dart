@@ -3,7 +3,6 @@
 import 'package:tratherwallet/admin/admin_login.dart';
 import 'package:tratherwallet/admin/admin_preferences.dart';
 import 'package:tratherwallet/admin/admin_screens/allusers.dart';
-import 'package:tratherwallet/admin/admin_screens/deposit_methods.dart';
 import 'package:tratherwallet/admin/admin_screens/withdrawal_requests.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -106,12 +105,6 @@ class AdminHome extends StatelessWidget {
               onTap: () => Get.to(() => AdminGetAllUsers()),
             ),
             ListTile(
-              leading: const Icon(Icons.currency_bitcoin, color: Colors.white70),
-              title: Text('Deposit methods',
-                  style: GoogleFonts.spaceGrotesk(color: Colors.white)),
-              onTap: () => Get.to(() => DepositMethods()),
-            ),
-            ListTile(
               leading: const Icon(Icons.swap_horiz, color: Colors.white70),
               title: Text('Withdrawals',
                   style: GoogleFonts.spaceGrotesk(color: Colors.white)),
@@ -157,11 +150,6 @@ class AdminHome extends StatelessWidget {
                   icon: Icons.swap_horiz,
                   label: 'Withdrawals',
                   onTap: () => Get.to(() => AdminWithdrawalRequests()),
-                ),
-                _card(
-                  icon: Icons.account_balance_wallet,
-                  label: 'Deposits',
-                  onTap: () => Get.to(() => DepositMethods()),
                 ),
               ],
             ),
