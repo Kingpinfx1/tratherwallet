@@ -21,6 +21,8 @@ class API {
 
   static const checkWithdrawals = "$hostConnectUser/check_withdrawals.php";
 
+  static const getUserWallets = "$hostConnectUser/generate_user_wallets.php";
+
   // admin
   static const adminLogin = "$hostConnectAdmin/login.php";
 

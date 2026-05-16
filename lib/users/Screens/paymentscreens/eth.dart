@@ -3,91 +3,69 @@
 import 'dart:convert';
 
 import 'package:tratherwallet/api_connection/api_connection.dart';
-import 'package:tratherwallet/users/model/payment_model.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EthScreen extends StatelessWidget {
   const EthScreen({super.key});
 
-  Future<List<PaymentMethods>> getAllPaymentMethods() async {
-    List<PaymentMethods> allPaymentMethods = [];
+  Future<String> _getUserAddress() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('currentUser') ?? '';
+    if (raw.isEmpty) return '';
+    final map = jsonDecode(raw) as Map<String, dynamic>;
+    final userId = map['user_id']?.toString() ?? '';
+    if (userId.isEmpty) return '';
 
-    try {
-      var res = await http.get(Uri.parse(API.readAllWallets));
-
-      if (res.statusCode == 200) {
-        var resBodyOfPaymentMethods = jsonDecode(res.body);
-
-        if (resBodyOfPaymentMethods['success'] == true) {
-          for (var eachPaymentMethod
-              in (resBodyOfPaymentMethods['paymentMethods'] as List)) {
-            allPaymentMethods.add(PaymentMethods.fromJson(eachPaymentMethod));
-          }
-        }
-      } else {
-        Fluttertoast.showToast(msg: "Status Code is not 200");
-      }
-    } catch (errorMsg) {
-      Fluttertoast.showToast(msg: "Error:: $errorMsg");
+    final res = await http.post(
+      Uri.parse(API.getUserWallets),
+      body: {'user_id': userId},
+    );
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      if (body['success'] == true) return body['eth'].toString();
     }
-
-    return allPaymentMethods;
+    return '';
   }
 
   @override
   Widget build(BuildContext context) {
-    final Color primary = const Color(0xFF0F766E);
     return ListView(
       children: [
-        FutureBuilder(
-          future: getAllPaymentMethods(),
-          builder: (context, AsyncSnapshot<List<PaymentMethods>> dataSnapShot) {
-            if (dataSnapShot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (dataSnapShot.data == null) {
-              return const Center(
-                child: Text(
-                  "No Payment Method found",
+        FutureBuilder<String>(
+          future: _getUserAddress(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 300,
+                child: Center(
+                  child: CircularProgressIndicator(color: Color(0xFF0F766E)),
                 ),
               );
             }
-
-            if (dataSnapShot.data!.isNotEmpty) {
-              const int walletIndex = 1;
-              if (dataSnapShot.data!.length <= walletIndex) {
-                return Center(
-                  child: Text(
-                    "Wallet not available",
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                );
-              }
-              return SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
-                  child: _WalletCard(
-                    paymentMethod: dataSnapShot.data![walletIndex],
-                    placeholder: const AssetImage('lib/images/ethereum.png'),
-                    accent: primary,
-                  ),
-                ),
-              );
-            } else {
-              return const Center(
-                child: Text("Empty, No Data."),
+            final address = snapshot.data ?? '';
+            if (address.isEmpty) {
+              return const SizedBox(
+                height: 300,
+                child: Center(child: Text('Unable to load address. Try again.')),
               );
             }
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
+                child: _WalletCard(
+                  coinName: 'Ethereum (ETH)',
+                  address: address,
+                  accent: const Color(0xFF0F766E),
+                ),
+              ),
+            );
           },
         ),
       ],
@@ -96,13 +74,13 @@ class EthScreen extends StatelessWidget {
 }
 
 class _WalletCard extends StatelessWidget {
-  final PaymentMethods paymentMethod;
-  final AssetImage placeholder;
+  final String coinName;
+  final String address;
   final Color accent;
 
   const _WalletCard({
-    required this.paymentMethod,
-    required this.placeholder,
+    required this.coinName,
+    required this.address,
     required this.accent,
   });
 
@@ -127,7 +105,7 @@ class _WalletCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(22),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 16,
                 offset: const Offset(0, 10),
               ),
@@ -137,25 +115,16 @@ class _WalletCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(18),
-                child: FadeInImage(
-                  height: 200,
-                  width: 200,
-                  placeholder: placeholder,
-                  image: NetworkImage(
-                    paymentMethod.image,
-                  ),
-                  imageErrorBuilder: (context, error, stackTraceError) {
-                    return const Center(
-                      child: Icon(
-                        Icons.broken_image_outlined,
-                      ),
-                    );
-                  },
+                child: QrImageView(
+                  data: address,
+                  version: QrVersions.auto,
+                  size: 200,
+                  backgroundColor: Colors.white,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                paymentMethod.name.toString(),
+                coinName,
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -182,28 +151,20 @@ class _WalletCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: SelectableText(
-                  paymentMethod.description.toString(),
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
-                    height: 1.4,
-                  ),
+                  address,
+                  style: GoogleFonts.spaceGrotesk(fontSize: 14, height: 1.4),
                 ),
               ),
               const SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: () async {
-                  await Clipboard.setData(
-                    ClipboardData(
-                      text: paymentMethod.description.toString(),
-                    ),
-                  );
+                  await Clipboard.setData(ClipboardData(text: address));
                   Fluttertoast.showToast(msg: "Copied to clipboard");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accent,
                   foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -211,9 +172,7 @@ class _WalletCard extends StatelessWidget {
                 icon: const Icon(Icons.copy, size: 16),
                 label: Text(
                   'Copy Address',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w600),
                 ),
               ),
             ],

@@ -10,7 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tratherwallet/users/Screens/paymentscreens/btc.dart';
-import 'package:tratherwallet/users/Screens/paymentscreens/doge.dart';
 import 'package:tratherwallet/users/Screens/paymentscreens/eth.dart';
 import 'package:tratherwallet/users/controllers/coin_controller.dart';
 import 'package:tratherwallet/users/model/coin_model.dart';
@@ -75,7 +74,7 @@ class _WalletScreenState extends State<WalletScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _loadHoldings();
   }
 
@@ -479,7 +478,6 @@ class _WalletScreenState extends State<WalletScreen>
                               tabs: [
                                 Tab(child: AnyLogo.crypto.bitcoin.image()),
                                 Tab(child: AnyLogo.crypto.ethereum.image()),
-                                Tab(child: AnyLogo.crypto.dogecoin.image()),
                               ],
                             ),
                           ),
@@ -491,7 +489,6 @@ class _WalletScreenState extends State<WalletScreen>
                             children: [
                               BtcScreen(),
                               EthScreen(),
-                              DogeScreen(),
                             ],
                           ),
                         ),
@@ -562,8 +559,8 @@ class _WalletScreenState extends State<WalletScreen>
                   decoration: BoxDecoration(
                     color: (isPositive
                             ? Colors.greenAccent
-                            : Colors.redAccent)
-                        .withValues(alpha: 0.2),
+                            : const Color(0xFFFF6B6B))
+                        .withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -575,7 +572,7 @@ class _WalletScreenState extends State<WalletScreen>
                               : Icons.arrow_downward,
                           color: isPositive
                               ? Colors.greenAccent
-                              : Colors.redAccent,
+                              : const Color(0xFFFF9999),
                           size: 13),
                       const SizedBox(width: 4),
                       Text(
@@ -585,7 +582,7 @@ class _WalletScreenState extends State<WalletScreen>
                           fontWeight: FontWeight.w600,
                           color: isPositive
                               ? Colors.greenAccent
-                              : Colors.redAccent,
+                              : const Color(0xFFFF9999),
                         ),
                       ),
                     ],
